@@ -71,7 +71,7 @@ const songs = [
     artist: "The Weeknd",
     album: "After Hours",
     cover: "assets/images/SaveYourTears.jpg",
-    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
+    sources: [SILENT_MP3],
     duration: "3:35",
     category: ["popular", "pop"],
     price: 1.29
@@ -82,7 +82,7 @@ const songs = [
     artist: "The Kid LAROI",
     album: "F*CK LOVE 3: OVER YOU",
     cover: "assets/images/HeatWaves.jpg",
-    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
+    sources: [SILENT_MP3],
     duration: "2:21",
     category: ["new", "pop"],
     price: 1.29
@@ -93,7 +93,7 @@ const songs = [
     artist: "Steve Lacy",
     album: "Gemini Rights",
     cover: "assets/images/BlindingLights.jpg",
-    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
+    sources: [SILENT_MP3],
     duration: "3:52",
     category: ["popular", "rock"],
     price: 1.29
@@ -104,7 +104,7 @@ const songs = [
     artist: "Glass Animals",
     album: "Dreamland",
     cover: "assets/images/HeatWaves.jpg",
-    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
+    sources: [SILENT_MP3],
     duration: "3:58",
     category: ["popular", "electronic"],
     price: 1.29
@@ -115,7 +115,7 @@ const songs = [
     artist: "Harry Styles",
     album: "Harry's House",
     cover: "assets/images/SaveYourTears.jpg",
-    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
+    sources: [SILENT_MP3],
     duration: "2:47",
     category: ["new", "pop"],
     price: 1.29
@@ -126,7 +126,7 @@ const songs = [
     artist: "Kate Bush",
     album: "Hounds of Love",
     cover: "assets/images/MidnightCity.jpg",
-    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
+    sources: [SILENT_MP3],
     duration: "4:58",
     category: ["popular", "rock"],
     price: 0.99
@@ -137,7 +137,7 @@ const songs = [
     artist: "Joji",
     album: "SMITHEREENS",
     cover: "assets/images/BlindingLights.jpg",
-    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
+    sources: [SILENT_MP3],
     duration: "3:53",
     category: ["new", "pop"],
     price: 1.29
@@ -148,7 +148,7 @@ const songs = [
     artist: "Beyoncé",
     album: "RENAISSANCE",
     cover: "assets/images/HeatWaves.jpg",
-    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
+    sources: [SILENT_MP3],
     duration: "4:38",
     category: ["new", "pop"],
     price: 1.29
@@ -159,7 +159,7 @@ const songs = [
     artist: "Lizzo",
     album: "Special",
     cover: "assets/images/SaveYourTears.jpg",
-    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
+    sources: [SILENT_MP3],
     duration: "3:11",
     category: ["new", "pop"],
     price: 1.29
@@ -258,13 +258,7 @@ const products = [
 document.addEventListener('DOMContentLoaded', () => {
   // Load saved state from localStorage
   try {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      document.body.classList.add('light-mode');
-      const themeToggle = document.getElementById('theme-toggle');
-      const icon = themeToggle?.querySelector('i');
-      if (icon) icon.className = 'ri-sun-line';
-    }
+    // Theme removed
 
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
@@ -953,23 +947,7 @@ function setupEventListeners() {
     });
   }
 
-  // Theme Toggle
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('light-mode');
-      const isLight = document.body.classList.contains('light-mode');
-      localStorage.setItem('theme', isLight ? 'light' : 'dark');
-
-      // Update icon
-      const icon = themeToggle.querySelector('i');
-      if (icon) {
-        icon.className = isLight ? 'ri-sun-line' : 'ri-moon-line';
-      }
-
-      showNotification(`${isLight ? 'Light' : 'Dark'} mode activated`, 'success');
-    });
-  }
+  // Theme toggle removed
 }
 
 // ==========================================

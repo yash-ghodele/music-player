@@ -43,17 +43,7 @@
   --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Light Mode Variables (if needed later) */
-body.light-mode {
-  --primary: #f72585;
-  --secondary: #7209b7;
-  --dark: #f8f9fa;
-  --darker: #ffffff;
-  --surface: #e9ecef;
-  --surface-hover: #dee2e6;
-  --text: #120118;
-  --text-secondary: #495057;
-}
+/* Light Mode Removed */
 
 /* Base Styles */
 * {
