@@ -1,123 +1,93 @@
-<svg
-  width="280"
-  height="90"
-  viewBox="0 0 280 90"
-  xmlns="http://www.w3.org/2000/svg"
-  role="img"
-  aria-label="Neon Beats Logo"
->
-  <title>Neon Beats</title>
-  <desc>Neon Beats – Premium Music Store and Player</desc>
-
-  <!-- Neon Glow -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
+    <!-- Vibrant Neon Gradient -->
+    <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d946ef;stop-opacity:1" /> <!-- Pink/Purple -->
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" /> <!-- Violet -->
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" /> <!-- Purple -->
+    </linearGradient>
+    
+    <!-- Deep Dark Background -->
+    <radialGradient id="darkOrb" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:#2e1065;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#020617;stop-opacity:1" />
+    </radialGradient>
+
+    <!-- Outer Glow Filter -->
     <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
       <feMerge>
-        <feMergeNode in="blur"/>
+        <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-
-    <!-- Brand Gradient -->
-    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#7209b7"/>
-      <stop offset="100%" stop-color="#f72585"/>
-    </linearGradient>
+    
+    <!-- Inner Gloss -->
+    <filter id="glassShine" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+    </filter>
   </defs>
 
-  <!-- Outer Circle (Vinyl / Logo Base) -->
-  <circle
-    cx="45"
-    cy="45"
-    r="28"
-    fill="none"
-    stroke="#f72585"
-    stroke-width="3"
-    filter="url(#neonGlow)"
-  />
+  <!-- 1. Dark Glass Background Base -->
+  <circle cx="256" cy="256" r="240" fill="url(#darkOrb)" stroke="#333" stroke-width="2"/>
 
-  <!-- Guitar Body -->
-  <ellipse
-    cx="42"
-    cy="50"
-    rx="9"
-    ry="11"
-    fill="none"
-    stroke="#4cc9f0"
-    stroke-width="2.5"
-    filter="url(#neonGlow)"
-  />
+  <!-- 2. Circular Equalizer (Simulated with dashed stroke) -->
+  <circle cx="256" cy="256" r="190" 
+          fill="none" 
+          stroke="url(#neonGrad)" 
+          stroke-width="16" 
+          stroke-dasharray="14 14" 
+          stroke-linecap="round"
+          filter="url(#neonGlow)" 
+          transform="rotate(-90 256 256)"/>
 
-  <!-- Guitar Upper Body -->
-  <ellipse
-    cx="50"
-    cy="42"
-    rx="6"
-    ry="7"
-    fill="none"
-    stroke="#4cc9f0"
-    stroke-width="2.2"
-    filter="url(#neonGlow)"
-  />
+  <!-- 3. Inner Ring -->
+  <circle cx="256" cy="256" r="150" 
+          fill="none" 
+          stroke="url(#neonGrad)" 
+          stroke-width="2" 
+          opacity="0.5"/>
 
-  <!-- Sound Hole -->
-  <circle
-    cx="44"
-    cy="50"
-    r="2.5"
-    fill="#4cc9f0"
-    filter="url(#neonGlow)"
-  />
+  <!-- 4. Central "NB" Waveform & Note -->
+  <g transform="translate(256 256) scale(1.4)" filter="url(#neonGlow)">
+    <!-- Stylized Pulse / Waveform -->
+    <path d="M-70 10 
+             Q -50 -60, -30 10 
+             T 10 10 
+             Q 30 80, 50 10 
+             T 90 10" 
+          fill="none" 
+          stroke="url(#neonGrad)" 
+          stroke-width="8" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          transform="translate(-10 0)"/>
+          
+     <!-- Musical Note overlaying -->
+     <path d="M30 -50 L30 10 M30 -30 Q 60 -50, 60 -10" 
+           stroke="#fff" 
+           stroke-width="6" 
+           fill="none" 
+           stroke-linecap="round"
+           opacity="0.9"/>
+  </g>
 
-  <!-- Guitar Neck -->
-  <rect
-    x="52"
-    y="26"
-    width="3"
-    height="20"
-    rx="1.5"
-    fill="#f72585"
-    filter="url(#neonGlow)"
-  />
+  <!-- 5. Glass Gloss Reflection (Top) -->
+  <path d="M120 120 Q 256 60 392 120" 
+        fill="none" 
+        stroke="rgba(255,255,255,0.4)" 
+        stroke-width="20" 
+        stroke-linecap="round" 
+        filter="url(#glassShine)" 
+        opacity="0.6"/>
+        
+  <!-- 6. Bottom Reflection (Subtle) -->
+  <path d="M160 380 Q 256 420 352 380" 
+        fill="none" 
+        stroke="rgba(255,255,255,0.1)" 
+        stroke-width="10" 
+        stroke-linecap="round" 
+        opacity="0.3"/>
 
-  <!-- Headstock -->
-  <rect
-    x="50"
-    y="22"
-    width="7"
-    height="5"
-    rx="2"
-    fill="#f72585"
-    filter="url(#neonGlow)"
-  />
-
-  <!-- Strings -->
-  <line x1="53" y1="27" x2="45" y2="49" stroke="#ffffff" stroke-width="0.6"/>
-  <line x1="54" y1="27" x2="46" y2="49" stroke="#ffffff" stroke-width="0.6"/>
-  <line x1="55" y1="27" x2="47" y2="49" stroke="#ffffff" stroke-width="0.6"/>
-
-  <!-- Brand Name -->
-  <text
-    x="85"
-    y="42"
-    font-size="26"
-    font-weight="700"
-    fill="url(#brandGradient)"
-    font-family="Segoe UI, Arial, sans-serif"
-  >
-    Neon Beats
-  </text>
-
-  <!-- Slogan -->
-  <text
-    x="85"
-    y="64"
-    font-size="11"
-    fill="#b3b3b3"
-    font-family="Segoe UI, Arial, sans-serif"
-    letter-spacing="0.6"
-  >
-    Feel the Rhythm. Live the Sound.
-  </text>
 </svg>
