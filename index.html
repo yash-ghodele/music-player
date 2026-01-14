@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Neon Beats - Premium Music Store & Player with Advanced Features">
+  <meta name="keywords" content="music, player, store, streaming, audio">
+  <title>Neon Beats - Premium Music Store & Player</title>
+  
+  <!-- External Libraries -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+</head>
+<body>
+  
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i class="fas fa-music"></i>
+        <span>Neon Beats</span>
+      </div>
+      
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#store" class="nav-link">Store</a></li>
+        <li><a href="#library" class="nav-link">Library</a></li>
+        <li><a href="#playlists" class="nav-link">Playlists</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+      </ul>
+      
+      <div class="nav-actions">
+        <button class="btn-icon" id="theme-toggle" title="Toggle Theme">
+          <i class="ri-moon-line"></i>
+        </button>
+        <button class="btn-icon cart-btn" id="cart-btn" title="Shopping Cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" id="cart-badge">0</span>
+        </button>
+        <button class="btn-primary" id="login-btn">Sign In</button>
+        <button class="nav-toggle" id="nav-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-background"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="gradient-text">Feel the Rhythm.</span><br>
+        Live the Sound.
+      </h1>
+      <p class="hero-description">
+        Experience music like never before with our premium collection of tracks and instruments.
+        Discover, play, and own the beats that move you.
+      </p>
+      <div class="hero-buttons">
+        <a href="#library" class="btn-large btn-primary">
+          <i class="ri-play-circle-line"></i>
+          Explore Library
+        </a>
+        <a href="#store" class="btn-large btn-secondary">
+          <i class="ri-shopping-bag-line"></i>
+          Shop Now
+        </a>
+      </div>
+      
+      <!-- Stats -->
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">15K+</div>
+          <div class="stat-label">Songs</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">Artists</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100K+</div>
+          <div class="stat-label">Users</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <i class="ri-arrow-down-s-line"></i>
+    </div>
+  </section>
+
+  <!-- Music Store Section -->
+  <section class="store-section" id="store">
+    <div class="container">
+      <div class="section-header">
+        <h2>Featured Products</h2>
+        <p>Premium instruments and accessories for music enthusiasts</p>
+      </div>
+      
+      <div class="store-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="guitars">Guitars</button>
+        <button class="filter-btn" data-filter="keyboards">Keyboards</button>
+        <button class="filter-btn" data-filter="drums">Drums</button>
+        <button class="filter-btn" data-filter="accessories">Accessories</button>
+      </div>
+      
+      <div class="products-grid" id="products-grid">
+        <!-- Products will be dynamically inserted here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Music Library Section -->
+  <section class="library-section" id="library">
+    <div class="container">
+      <div class="section-header">
+        <h2>Music Library</h2>
+        <p>Discover and play from our extensive collection</p>
+      </div>
+      
+      <!-- Library Controls -->
+      <div class="library-controls">
+        <div class="search-container">
+          <i class="ri-search-line"></i>
+          <input type="text" class="search-input" id="search-input" placeholder="Search songs, artists, albums...">
+          <button class="clear-search" id="clear-search" style="display: none;">
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+        
+        <div class="action-controls">
+          <input type="file" id="local-folder-input" webkitdirectory directory multiple style="display: none;">
+          <button class="btn-primary btn-sm" id="import-music-btn" style="margin-right: 1rem;">
+            <i class="ri-folder-music-line"></i> Import Local
+          </button>
+        
+          <div class="view-controls">
+            <button class="view-btn active" data-view="grid" title="Grid View">
+              <i class="ri-grid-line"></i>
+            </button>
+            <button class="view-btn" data-view="list" title="List View">
+              <i class="ri-list-check"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Category Tabs -->
+      <div class="category-tabs">
+        <button class="category-tab active" data-category="all">All</button>
+        <button class="category-tab" data-category="popular">Popular</button>
+        <button class="category-tab" data-category="new">New Releases</button>
+        <button class="category-tab" data-category="rock">Rock</button>
+        <button class="category-tab" data-category="pop">Pop</button>
+        <button class="category-tab" data-category="electronic">Electronic</button>
+        <button class="category-tab" data-category="favorites">
+          <i class="ri-heart-fill"></i> Favorites
+        </button>
+      </div>
+      
+      <!-- Songs Grid/List -->
+      <div class="songs-container grid-view" id="songs-container">
+        <!-- Songs will be dynamically inserted here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Playlists Section -->
+  <section class="playlists-section" id="playlists">
+    <div class="container">
+      <div class="section-header">
+        <h2>Your Playlists</h2>
+        <button class="btn-primary" id="create-playlist-btn">
+          <i class="ri-add-line"></i> Create Playlist
+        </button>
+      </div>
+      
+      <div class="playlists-grid" id="playlists-grid">
+        <!-- Playlists will be dynamically inserted here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why Choose Neon Beats?</h2>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="ri-music-2-line"></i>
+          </div>
+          <h3>Premium Quality</h3>
+          <p>High-fidelity audio streaming with lossless quality options</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="ri-headphone-line"></i>
+          </div>
+          <h3>Extensive Library</h3>
+          <p>15,000+ songs across all genres and moods</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="ri-equalizer-line"></i>
+          </div>
+          <h3>Audio Visualizer</h3>
+          <p>Real-time visual feedback with stunning effects</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="ri-shopping-bag-line"></i>
+          </div>
+          <h3>Music Store</h3>
+          <p>Premium instruments and accessories for musicians</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="ri-playlist-line"></i>
+          </div>
+          <h3>Smart Playlists</h3>
+          <p>Create and manage your perfect music collections</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="ri-download-cloud-line"></i>
+          </div>
+          <h3>Offline Mode</h3>
+          <p>Download and listen to your favorites offline</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-content">
+        <h2>Stay in the Loop</h2>
+        <p>Subscribe to get the latest music releases and exclusive offers</p>
+        <form class="newsletter-form" id="newsletter-form">
+          <input type="email" placeholder="Enter your email" required id="newsletter-email">
+          <button type="submit" class="btn-primary">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>
+            <i class="fas fa-music"></i>
+            Neon Beats
+          </h3>
+          <p>Your ultimate destination for music streaming and premium instruments.</p>
+          <div class="social-links">
+            <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" title="Spotify"><i class="fab fa-spotify"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#store">Store</a></li>
+            <li><a href="#library">Library</a></li>
+            <li><a href="#playlists">Playlists</a></li>
+            <li><a href="#about">About</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Refund Policy</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <ul>
+            <li><i class="ri-mail-line"></i> support@neonbeats.com</li>
+            <li><i class="ri-phone-line"></i> +1 (555) 123-4567</li>
+            <li><i class="ri-map-pin-line"></i> 123 Music Street, NY</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 Neon Beats. All rights reserved. Made with <i class="ri-heart-fill"></i> for music lovers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Music Player (Fixed Bottom) -->
+  <div class="music-player" id="music-player">
+    <div class="player-left">
+      <img src="assets/images/MidnightCity.jpg" alt="Album Cover" class="player-cover" id="player-cover">
+      <div class="player-info">
+        <div class="player-title" id="player-title">Select a song</div>
+        <div class="player-artist" id="player-artist">Artist</div>
+      </div>
+      <button class="btn-icon favorite-btn" id="favorite-btn" title="Like">
+        <i class="ri-heart-line"></i>
+      </button>
+    </div>
+    
+    <div class="player-center">
+      <div class="player-controls">
+        <button class="control-btn" id="shuffle-btn" title="Shuffle">
+          <i class="ri-shuffle-line"></i>
+        </button>
+        <button class="control-btn" id="prev-btn" title="Previous">
+          <i class="ri-skip-back-fill"></i>
+        </button>
+        <button class="control-btn play-btn" id="play-btn" title="Play">
+          <i class="ri-play-fill"></i>
+        </button>
+        <button class="control-btn" id="next-btn" title="Next">
+          <i class="ri-skip-forward-fill"></i>
+        </button>
+        <button class="control-btn" id="repeat-btn" title="Repeat">
+          <i class="ri-repeat-line"></i>
+        </button>
+      </div>
+      
+      <div class="progress-bar-container">
+        <span class="time-current" id="time-current">0:00</span>
+        <div class="progress-bar" id="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <span class="time-total" id="time-total">0:00</span>
+      </div>
+    </div>
+    
+    <div class="player-right">
+      <button class="btn-icon" id="queue-btn" title="Queue">
+        <i class="ri-list-ordered"></i>
+      </button>
+      <button class="btn-icon" id="visualizer-btn" title="Visualizer">
+        <i class="ri-equalizer-fill"></i>
+      </button>
+      <div class="volume-control">
+        <button class="btn-icon" id="volume-btn" title="Mute">
+          <i class="ri-volume-up-line"></i>
+        </button>
+        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="70">
+      </div>
+    </div>
+  </div>
+
+  <!-- Queue Panel (Slide-in) -->
+  <div class="queue-panel" id="queue-panel">
+    <div class="panel-header">
+      <h3><i class="ri-list-ordered"></i> Queue</h3>
+      <button class="btn-icon" id="close-queue">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+    <div class="panel-content">
+      <div class="queue-now-playing">
+        <h4>Now Playing</h4>
+        <div id="queue-current"></div>
+      </div>
+      <div class="queue-next">
+        <h4>Up Next</h4>
+        <div id="queue-list"></div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn-secondary" id="clear-queue">Clear Queue</button>
+    </div>
+  </div>
+
+  <!-- Visualizer Panel -->
+  <div class="visualizer-panel" id="visualizer-panel">
+    <div class="panel-header">
+      <h3><i class="ri-equalizer-fill"></i> Audio Visualizer</h3>
+      <button class="btn-icon" id="close-visualizer">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+    <div class="panel-content">
+      <canvas id="visualizer-canvas"></canvas>
+    </div>
+  </div>
+
+  <!-- Shopping Cart Panel -->
+  <div class="cart-panel" id="cart-panel">
+    <div class="panel-header">
+      <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+      <button class="btn-icon" id="close-cart">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+    <div class="panel-content" id="cart-items">
+      <!-- Cart items will be inserted here -->
+    </div>
+    <div class="panel-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span id="cart-total">$0.00</span>
+      </div>
+      <button class="btn-primary btn-block" id="checkout-btn">
+        <i class="ri-secure-payment-line"></i> Checkout
+      </button>
+    </div>
+  </div>
+
+  <!-- Notifications Container -->
+  <div class="notifications-container" id="notifications"></div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div id="quick-view-modal" class="modal">
+    <div class="modal-content glass-panel">
+      <span class="close-modal" id="close-quick-view">&times;</span>
+      <div class="quick-view-grid">
+        <div class="quick-view-image">
+          <img id="qv-image" src="" alt="Product">
+        </div>
+        <div class="quick-view-info">
+          <div class="qv-category" id="qv-category">Guitar</div>
+          <h2 id="qv-title">Fender Stratocaster</h2>
+          <div class="qv-rating" id="qv-rating">
+            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+          </div>
+          <p class="qv-description">Experience premium sound quality with this professional-grade instrument. Built for performance and durability.</p>
+          <div class="qv-price" id="qv-price">$1,499.99</div>
+          <button class="btn-primary" id="qv-add-btn">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="modal">
+    <div class="modal-content glass-panel checkout-content">
+      <span class="close-modal" id="close-checkout">&times;</span>
+      <h2>Checkout</h2>
+      <div class="checkout-summary">
+        <div class="summary-row">
+          <span>Total items:</span>
+          <span id="checkout-count">0</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total:</span>
+          <span id="checkout-total">$0.00</span>
+        </div>
+      </div>
+      <form id="checkout-form" onsubmit="event.preventDefault(); window.processPayment();">
+        <div class="form-group">
+          <label>Card Number</label>
+          <input type="text" placeholder="**** **** **** ****" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Expiry</label>
+            <input type="text" placeholder="MM/YY" required>
+          </div>
+          <div class="form-group">
+            <label>CVC</label>
+            <input type="text" placeholder="123" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary btn-block">Pay Now</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment Success Overlay -->
+  <div id="success-overlay" class="overlay">
+    <div class="success-content">
+      <div class="checkmark-circle">
+        <div class="background"></div>
+        <div class="checkmark draw"></div>
+      </div>
+      <h2>Payment Successful!</h2>
+      <p>Your order runs on music. 🎵</p>
+      <button class="btn-primary" onclick="window.closeSuccess()">Continue Shopping</button>
+    </div>
+  </div>
+
+  <!-- Expanded Player Overlay -->
+  <div class="expanded-player" id="expanded-player">
+    <div class="expanded-header">
+      <button class="icon-btn min-btn" onclick="toggleExpandedPlayer()" title="Minimize">
+        <i class="ri-arrow-down-s-line" style="font-size: 2rem;"></i>
+      </button>
+      <div class="playing-from">
+        <span>PLAYING FROM PLAYLIST</span>
+        <span class="playlist-name">Daily Mix</span>
+      </div>
+      <button class="icon-btn" title="Settings">
+        <i class="ri-settings-3-line"></i>
+      </button>
+    </div>
+    
+    <div class="expanded-body">
+      <div class="player-main-section">
+        <div class="circle-container">
+          <!-- Prev/Next buttons positioned absolutely -->
+          <button class="orbit-btn prev" onclick="prevSong()"><i class="ri-skip-back-fill"></i></button>
+          <button class="orbit-btn next" onclick="nextSong()"><i class="ri-skip-forward-fill"></i></button>
+          
+          <div class="central-circle">
+            <svg class="progress-ring" width="340" height="340">
+               <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" r="160" cx="170" cy="170"/>
+               <circle class="progress-ring__circle" id="circle-progress" stroke="var(--primary)" stroke-width="6" fill="transparent" r="160" cx="170" cy="170"/>
+               <!-- Handle circle to show current position? Optional -->
+            </svg>
+            <div class="art-container">
+                <img id="expanded-art" src="" alt="Album Art">
+                <div class="center-play-overlay">
+                    <button class="center-play-btn" onclick="togglePlay()">
+                        <i class="ri-play-fill" id="expanded-play-icon"></i>
+                    </button>
+                </div>
+            </div>
+          </div>
+          
+          <div class="bottom-controls">
+            <button class="orbit-btn shuffle" id="expanded-shuffle-btn" onclick="toggleShuffle()"><i class="ri-shuffle-line"></i></button>
+            <span class="time-display" id="expanded-time">0:00</span>
+            <button class="orbit-btn repeat" id="expanded-repeat-btn" onclick="toggleRepeat()"><i class="ri-repeat-2-line"></i></button>
+          </div>
+        </div>
+        
+        <div class="track-info-large">
+             <div class="visualizer-mini" id="mini-viz">
+                 <!-- Bars generated by JS -->
+             </div>
+             <div class="text-info">
+                 <h2 id="expanded-title">Song Title</h2>
+                 <p id="expanded-artist">Artist Name</p>
+             </div>
+             <div class="actions">
+                <button class="icon-btn"><i class="ri-heart-line" id="expanded-heart"></i></button>
+                <button class="icon-btn"><i class="ri-share-line"></i></button>
+                <button class="icon-btn"><i class="ri-more-2-fill"></i></button>
+             </div>
+        </div>
+      </div>
+      
+      <div class="expanded-sidebar-queue">
+          <h3>Next up</h3>
+          <div class="next-list" id="expanded-queue-list">
+              <!-- Queue items -->
+          </div>
+          
+          <div class="sidebar-section">
+              <h3>Related</h3>
+              <div class="related-list">
+                  <!-- Mock related items -->
+                  <div class="queue-item mock">
+                      <img src="assets/images/related_neon.jpg" alt="Related">
+                      <div class="queue-info">
+                          <h5>Neon Dreams</h5>
+                          <p>Synth City</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Element -->
+  <audio id="audio-player" preload="metadata" crossorigin="anonymous"></audio>
+
+  <!-- Custom JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
