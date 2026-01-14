@@ -783,10 +783,14 @@ function setupPlayerListeners() {
     }
   });
 
-  // Expanded Player Sync
-  document.getElementById('expanded-play-btn').addEventListener('click', togglePlay);
-  document.getElementById('expanded-prev-btn').addEventListener('click', prevSong);
-  document.getElementById('expanded-next-btn').addEventListener('click', nextSong);
+  // Expanded Player Sync (only if elements exist)
+  const expandedPlayBtn = document.getElementById('expanded-play-btn');
+  const expandedPrevBtn = document.getElementById('expanded-prev-btn');
+  const expandedNextBtn = document.getElementById('expanded-next-btn');
+
+  if (expandedPlayBtn) expandedPlayBtn.addEventListener('click', togglePlay);
+  if (expandedPrevBtn) expandedPrevBtn.addEventListener('click', prevSong);
+  if (expandedNextBtn) expandedNextBtn.addEventListener('click', nextSong);
 }
 
 function setupEventListeners() {
