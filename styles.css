@@ -57,21 +57,27 @@ html {
 }
 
 /* Custom Scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary) var(--darker);
+}
+
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--dark);
+  background: var(--darker);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 5px;
+  background: var(--secondary);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
 }
 
 body {
