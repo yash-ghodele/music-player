@@ -283,32 +283,7 @@ const products = [
   }
 ];
 
-const playlists = [
-  {
-    id: 'pl1',
-    title: 'Top Hits 2024',
-    image: 'assets/images/playlist_hits.jpg',
-    count: 50
-  },
-  {
-    id: 'pl2',
-    title: 'Neon Nights',
-    image: 'assets/images/playlist_neon.jpg',
-    count: 32
-  },
-  {
-    id: 'pl3',
-    title: 'Chill Vibes',
-    image: 'assets/images/playlist_chill.jpg',
-    count: 45
-  },
-  {
-    id: 'pl4',
-    title: 'Workout Energy',
-    image: 'assets/images/playlist_workout.jpg',
-    count: 28
-  }
-];
+
 
 // ==========================================
 // Initialization
@@ -451,25 +426,7 @@ function renderProducts() {
   });
 }
 
-function renderPlaylists() {
-  const container = document.getElementById('playlists-grid');
-  container.innerHTML = '';
 
-  playlists.forEach(playlist => {
-    const card = document.createElement('div');
-    card.className = 'playlist-card';
-
-    card.innerHTML = `
-      <img src="${playlist.image}" alt="${playlist.title}" class="playlist-bg" loading="lazy">
-      <div class="playlist-info">
-        <h3>${playlist.title}</h3>
-        <p>${playlist.count} Songs</p>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-}
 
 function getStarRating(rating) {
   let stars = '';
