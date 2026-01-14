@@ -307,10 +307,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Remove loading overlay
   setTimeout(() => {
-    document.getElementById('loading-overlay').style.opacity = '0';
-    setTimeout(() => {
-      document.getElementById('loading-overlay').style.visibility = 'hidden';
-    }, 500);
+    try {
+      const overlay = document.getElementById('loading-overlay');
+      if (overlay) {
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.5s';
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          overlay.style.visibility = 'hidden';
+        }, 500);
+      } else {
+        console.warn('Loading overlay element not found');
+      }
+    } catch (e) {
+      console.error('Error hiding loading overlay:', e);
+    }
   }, 1000);
 });
 
