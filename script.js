@@ -38,7 +38,7 @@ const songs = [
     artist: "M83",
     album: "Hurry Up, We're Dreaming",
     cover: "assets/images/MidnightCity.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "4:03",
     category: ["popular", "electronic", "favorites"],
     price: 1.29
@@ -49,7 +49,7 @@ const songs = [
     artist: "The Weeknd",
     album: "After Hours",
     cover: "assets/images/BlindingLights.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "3:20",
     category: ["popular", "pop"],
     price: 1.29
@@ -60,7 +60,7 @@ const songs = [
     artist: "Dua Lipa",
     album: "Future Nostalgia",
     cover: "assets/images/MidnightCity.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "3:45",
     category: ["popular", "pop"],
     price: 1.29
@@ -71,7 +71,7 @@ const songs = [
     artist: "The Weeknd",
     album: "After Hours",
     cover: "assets/images/SaveYourTears.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "3:35",
     category: ["popular", "pop"],
     price: 1.29
@@ -82,7 +82,7 @@ const songs = [
     artist: "The Kid LAROI",
     album: "F*CK LOVE 3: OVER YOU",
     cover: "assets/images/HeatWaves.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "2:21",
     category: ["new", "pop"],
     price: 1.29
@@ -93,7 +93,7 @@ const songs = [
     artist: "Steve Lacy",
     album: "Gemini Rights",
     cover: "assets/images/BlindingLights.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "3:52",
     category: ["popular", "rock"],
     price: 1.29
@@ -104,7 +104,7 @@ const songs = [
     artist: "Glass Animals",
     album: "Dreamland",
     cover: "assets/images/HeatWaves.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "3:58",
     category: ["popular", "electronic"],
     price: 1.29
@@ -115,7 +115,7 @@ const songs = [
     artist: "Harry Styles",
     album: "Harry's House",
     cover: "assets/images/SaveYourTears.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "2:47",
     category: ["new", "pop"],
     price: 1.29
@@ -126,7 +126,7 @@ const songs = [
     artist: "Kate Bush",
     album: "Hounds of Love",
     cover: "assets/images/MidnightCity.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "4:58",
     category: ["popular", "rock"],
     price: 0.99
@@ -137,7 +137,7 @@ const songs = [
     artist: "Joji",
     album: "SMITHEREENS",
     cover: "assets/images/BlindingLights.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "3:53",
     category: ["new", "pop"],
     price: 1.29
@@ -148,7 +148,7 @@ const songs = [
     artist: "Beyoncé",
     album: "RENAISSANCE",
     cover: "assets/images/HeatWaves.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "4:38",
     category: ["new", "pop"],
     price: 1.29
@@ -159,7 +159,7 @@ const songs = [
     artist: "Lizzo",
     album: "Special",
     cover: "assets/images/SaveYourTears.jpg",
-    sources: [SILENT_MP3],
+    sources: ['assets/audio/sample.mp3'],
     duration: "3:11",
     category: ["new", "pop"],
     price: 1.29
