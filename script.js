@@ -3,6 +3,11 @@
  * Advanced JavaScript for Music Player, Visualizer, and Store Functionality
  */
 
+// Global Error Handler for Debugging
+window.onerror = function (msg, url, line, col, error) {
+  alert("Error: " + msg + "\nLine: " + line + "\nColumn: " + col);
+};
+
 // ==========================================
 // Application State & Configuration
 // ==========================================
@@ -293,21 +298,17 @@ document.addEventListener('DOMContentLoaded', () => {
   appState.playlist = [...songs];
   appState.originalPlaylist = [...songs];
 
-  // Load saved state (favorites, cart)
-  loadStateForStorage();
-
-  // Render components
+  // Initialize UI
   renderSongs();
-  renderProducts();
-  renderPlaylists();
-  updateCartBadge();
+  updateCartUI();
+  updateVolumeUI();
 
-  // Initialize player UI
+  // Load initial song
   loadSong(appState.currentSongIndex);
 
-  // Event Listeners
-  setupEventListeners();
+  // Setup Listeners
   setupPlayerListeners();
+  setupEventListeners();
 
   // Remove loading overlay
   setTimeout(() => {
@@ -388,11 +389,15 @@ function renderSongs() {
   });
 }
 
-function renderProducts() {
+function renderProducts(filter = 'all') {
   const container = document.getElementById('products-grid');
   container.innerHTML = '';
 
-  products.forEach((product, index) => {
+  const filteredProducts = filter === 'all'
+    ? products
+    : products.filter(p => p.category === filter);
+
+  filteredProducts.forEach((product, index) => {
     const card = document.createElement('div');
     card.className = 'product-card';
 
@@ -448,6 +453,7 @@ function getStarRating(rating) {
 const audio = document.getElementById('audio-player');
 
 function loadSong(index) {
+  appState.currentSongIndex = index; // Ensure currentSongIndex is updated
   const song = appState.playlist[index];
   if (!song) return;
 
@@ -459,7 +465,7 @@ function loadSong(index) {
   // If it's 404, it might error, but we'll catch it on play
   audio.src = song.sources[0];
 
-  renderSongs();
+  renderSongs(); // Re-render to highlight active song
 
   // Update favorite button
   const favBtn = document.getElementById('favorite-btn');
@@ -482,6 +488,7 @@ function loadSong(index) {
   }
 
   renderQueue();
+  updateExpandedPlayerUI(); // Update expanded player if open
 }
 
 async function playWithFallback(song) {
@@ -513,7 +520,7 @@ async function playWithFallback(song) {
     updatePlayButton();
     showNotification('All sources failed for this song.', 'error');
 
-    // Auto skip to next song if this one is broken? 
+    // Auto skip to next song if this one is broken?
     // Maybe not, might cause infinite loop if all broken.
   }
 }
@@ -522,23 +529,9 @@ function playSongAtIndex(index) {
   appState.currentSongIndex = index;
   const song = appState.playlist[index];
 
-  document.getElementById('player-title').textContent = song.title;
-  document.getElementById('player-artist').textContent = song.artist;
-  document.getElementById('player-cover').src = song.cover;
-
   // Update UI immediately (optimistic)
-  renderSongs();
-  renderQueue();
-
-  // Update favorites icon
-  const favBtn = document.getElementById('favorite-btn');
-  if (appState.favorites.includes(song.id)) {
-    favBtn.classList.add('active');
-    favBtn.querySelector('i').className = 'ri-heart-fill';
-  } else {
-    favBtn.classList.remove('active');
-    favBtn.querySelector('i').className = 'ri-heart-line';
-  }
+  // loadSong already updates player info and re-renders songs/queue
+  loadSong(index);
 
   playWithFallback(song);
 }
@@ -595,7 +588,7 @@ function nextSong() {
 function toggleShuffle() {
   appState.isShuffled = !appState.isShuffled;
   const btn = document.getElementById('shuffle-btn');
-  btn.classList.toggle('active');
+  const expandedBtn = document.getElementById('expanded-shuffle-btn');
 
   if (appState.isShuffled) {
     // Fisher-Yates shuffle
@@ -615,6 +608,8 @@ function toggleShuffle() {
     appState.playlist = shuffled;
     appState.currentSongIndex = 0;
 
+    btn.classList.add('active');
+    if (expandedBtn) expandedBtn.classList.add('active');
     showNotification('Shuffle On', 'info');
   } else {
     // Restore original order but keep current song playing
@@ -622,6 +617,8 @@ function toggleShuffle() {
     appState.playlist = [...appState.originalPlaylist];
     appState.currentSongIndex = appState.playlist.findIndex(s => s.id === currentSong.id);
 
+    btn.classList.remove('active');
+    if (expandedBtn) expandedBtn.classList.remove('active');
     showNotification('Shuffle Off', 'info');
   }
 
@@ -651,16 +648,17 @@ function toggleRepeat() {
 }
 
 function updatePlayButton() {
-  const btn = document.getElementById('play-btn');
-  const expandedBtn = document.getElementById('expanded-play-icon');
+  const btns = [document.getElementById('play-btn'), document.getElementById('expanded-play-btn')];
 
-  if (appState.isPlaying) {
-    btn.innerHTML = '<i class="ri-pause-fill"></i>';
-    if (expandedBtn) expandedBtn.className = 'ri-pause-fill';
-  } else {
-    btn.innerHTML = '<i class="ri-play-fill"></i>';
-    if (expandedBtn) expandedBtn.className = 'ri-play-fill';
-  }
+  btns.forEach(btn => {
+    if (!btn) return;
+    const icon = btn.querySelector('i');
+    if (appState.isPlaying) {
+      icon.className = 'ri-pause-fill';
+    } else {
+      icon.className = 'ri-play-fill';
+    }
+  });
 }
 
 function formatTime(seconds) {
@@ -669,13 +667,14 @@ function formatTime(seconds) {
   return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-function updateProgress() {
+function updateProgress(e) {
   const { duration, currentTime } = audio;
-  const percent = (currentTime / duration) * 100;
+  const progressPercent = (currentTime / duration) * 100;
 
   if (isNaN(duration)) return;
 
-  document.getElementById('progress-fill').style.width = `${percent}%`;
+  // Main Player Progress Bar
+  document.getElementById('progress-fill').style.width = `${progressPercent}%`;
   document.getElementById('time-current').textContent = formatTime(currentTime);
   document.getElementById('time-total').textContent = formatTime(duration);
 
@@ -684,7 +683,7 @@ function updateProgress() {
   if (circle) {
     const radius = circle.getAttribute('r');
     const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (currentTime / duration) * circumference;
+    const offset = circumference - (progressPercent / 100) * circumference;
     circle.style.strokeDashoffset = offset;
   }
 
@@ -711,7 +710,8 @@ function setupPlayerListeners() {
   audio.addEventListener('timeupdate', updateProgress);
   audio.addEventListener('ended', () => {
     if (appState.repeatMode === 'one') {
-      playAudio();
+      audio.currentTime = 0;
+      audio.play();
     } else {
       nextSong();
     }
@@ -739,15 +739,7 @@ function setupPlayerListeners() {
     const value = e.target.value / 100;
     appState.volume = value;
     audio.volume = value;
-
-    // Update icon based on volume
-    if (value === 0) {
-      volumeBtn.querySelector('i').className = 'ri-volume-mute-line';
-    } else if (value < 0.5) {
-      volumeBtn.querySelector('i').className = 'ri-volume-down-line';
-    } else {
-      volumeBtn.querySelector('i').className = 'ri-volume-up-line';
-    }
+    updateVolumeUI(); // Update icon based on volume
   });
 
   volumeBtn.addEventListener('click', () => {
@@ -756,9 +748,9 @@ function setupPlayerListeners() {
       volumeSlider.value = 0;
       volumeBtn.querySelector('i').className = 'ri-volume-mute-line';
     } else {
-      audio.volume = appState.volume;
+      audio.volume = appState.volume; // Restore to previous volume
       volumeSlider.value = appState.volume * 100;
-      volumeBtn.querySelector('i').className = 'ri-volume-up-line';
+      updateVolumeUI(); // Update icon based on restored volume
     }
   });
 
@@ -820,6 +812,11 @@ function setupPlayerListeners() {
       nextSong();
     }
   });
+
+  // Expanded Player Sync
+  document.getElementById('expanded-play-btn').addEventListener('click', togglePlay);
+  document.getElementById('expanded-prev-btn').addEventListener('click', prevSong);
+  document.getElementById('expanded-next-btn').addEventListener('click', nextSong);
 }
 
 function setupEventListeners() {
@@ -850,21 +847,26 @@ function setupEventListeners() {
 
   // Search
   const searchInput = document.getElementById('search-input');
-  searchInput.addEventListener('input', (e) => {
-    appState.searchQuery = e.target.value.toLowerCase();
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      appState.searchQuery = e.target.value.toLowerCase();
 
-    const clearBtn = document.getElementById('clear-search');
-    clearBtn.style.display = appState.searchQuery ? 'block' : 'none';
+      const clearBtn = document.getElementById('clear-search');
+      if (clearBtn) clearBtn.style.display = appState.searchQuery ? 'block' : 'none';
 
-    renderSongs();
-  });
+      renderSongs();
+    });
+  }
 
-  document.getElementById('clear-search').addEventListener('click', () => {
-    searchInput.value = '';
-    appState.searchQuery = '';
-    document.getElementById('clear-search').style.display = 'none';
-    renderSongs();
-  });
+  const clearSearch = document.getElementById('clear-search');
+  if (clearSearch) {
+    clearSearch.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      appState.searchQuery = '';
+      clearSearch.style.display = 'none';
+      renderSongs();
+    });
+  }
 
   // Category Filters
   document.querySelectorAll('.category-tab').forEach(tab => {
@@ -901,38 +903,7 @@ function setupEventListeners() {
       this.classList.add('active');
 
       // Filter products
-      const container = document.getElementById('products-grid');
-      const filteredProducts = filter === 'all'
-        ? products
-        : products.filter(p => p.category === filter);
-
-      container.innerHTML = '';
-
-      filteredProducts.forEach(product => {
-        // Reuse create product logic...
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <div class="product-image">
-            <img src="${product.image}" alt="${product.title}" loading="lazy">
-            <div class="product-overlay">
-              <button class="btn-icon" onclick="addToCart('${product.id}')" title="Add to Cart">
-                <i class="ri-shopping-cart-2-line"></i>
-              </button>
-              <button class="btn-icon" title="Quick View">
-                <i class="ri-eye-line"></i>
-              </button>
-            </div>
-          </div>
-          <div class="product-info">
-            <span class="product-category">${product.category}</span>
-            <h3 class="product-title">${product.title}</h3>
-            <div class="product-rating">${getStarRating(product.rating)}</div>
-            <div class="product-price">$${product.price}</div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
+      renderProducts(filter);
     });
   });
 
@@ -947,14 +918,11 @@ function setupEventListeners() {
   });
 
   // Cart Toggle
-  document.getElementById('cart-btn').addEventListener('click', () => {
-    document.getElementById('cart-panel').classList.add('panel-open');
-    renderCart();
-  });
+  const cartBtn = document.getElementById('cart-btn');
+  if (cartBtn) cartBtn.addEventListener('click', toggleCart);
 
-  document.getElementById('close-cart').addEventListener('click', () => {
-    document.getElementById('cart-panel').classList.remove('panel-open');
-  });
+  const closeCartBtn = document.getElementById('close-cart');
+  if (closeCartBtn) closeCartBtn.addEventListener('click', toggleCart);
 }
 
 // ==========================================
@@ -976,7 +944,7 @@ function initVisualizer() {
     } catch (e) {
       console.warn('Visualizer connection failed (likely CORS):', e);
       // Fallback: just play audio without visualizer
-      // Note: We don't need to connect to destination here because the <audio> element 
+      // Note: We don't need to connect to destination here because the <audio> element
       // is already connected to the output by default if we didn't successfully hijack it with createMediaElementSource
       // However, if createMediaElementSource DID succeed but connect failed, we might be in a weird state.
       // Usually, if createMediaElementSource works, it routes audio away from the destination.
@@ -1102,59 +1070,53 @@ function addToCart(productId) {
     showNotification(`${product.title} added to cart!`, 'success');
   }
 
-  updateCartBadge();
+  updateCartUI();
   saveStateToStorage();
 }
 
-function removeFromCart(productId) {
-  appState.cart = appState.cart.filter(item => item.id !== productId);
-  renderCart();
-  updateCartBadge();
+function removeFromCart(id) {
+  appState.cart = appState.cart.filter(item => item.id !== id);
+  updateCartUI();
   saveStateToStorage();
 }
 
-function updateCartBadge() {
-  const badge = document.getElementById('cart-badge');
-  const count = appState.cart.reduce((total, item) => total + item.quantity, 0);
-  badge.textContent = count;
-  badge.style.display = count > 0 ? 'flex' : 'none';
-}
-
-function renderCart() {
-  const container = document.getElementById('cart-items');
-  const totalEl = document.getElementById('cart-total');
-
+function updateCartUI() {
+  const container = document.querySelector('.cart-items');
+  if (!container) return;
   container.innerHTML = '';
 
-  if (appState.cart.length === 0) {
-    container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #888;">Your cart is empty</div>';
-    totalEl.textContent = '$0.00';
-    return;
-  }
-
   let total = 0;
+  let count = 0;
 
   appState.cart.forEach(item => {
-    const itemTotal = item.price * item.quantity;
-    total += itemTotal;
+    total += item.price * item.quantity;
+    count += item.quantity;
 
-    const div = document.createElement('div');
-    div.className = 'cart-item';
-    div.innerHTML = `
-      <img src="${item.image}" alt="${item.title}" class="cart-item-img">
+    const cartItem = document.createElement('div');
+    cartItem.className = 'cart-item';
+    cartItem.innerHTML = `
+      <img src="${item.image}" alt="${item.title}">
       <div class="cart-item-info">
         <h4>${item.title}</h4>
-        <span class="cart-item-price">$${item.price} x ${item.quantity}</span>
-        <button class="remove-item">Remove</button>
+        <div class="cart-item-price">$${item.price.toLocaleString()} x ${item.quantity}</div>
       </div>
-      <div>$${itemTotal.toFixed(2)}</div>
+      <button class="remove-btn" onclick="removeFromCart('${item.id}')">
+        <i class="ri-close-line"></i>
+      </button>
     `;
-
-    div.querySelector('.remove-item').addEventListener('click', () => removeFromCart(item.id));
-    container.appendChild(div);
+    container.appendChild(cartItem);
   });
 
-  totalEl.textContent = `$${total.toFixed(2)}`;
+  // Update Total
+  const totalEl = document.getElementById('cart-total-display');
+  if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
+
+  // Update Badge
+  const badges = document.querySelectorAll('.cart-count');
+  badges.forEach(badge => {
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'flex' : 'none';
+  });
 }
 
 // ==========================================
@@ -1319,6 +1281,8 @@ function addLocalCategoryTab() {
 
 // Expose functions globally for HTML onclick events
 window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+
 // ==========================================
 // Expanded Player Logic
 // ==========================================
@@ -1340,36 +1304,31 @@ function updateExpandedPlayerUI() {
 
   // Render Queue
   const queueList = document.getElementById('expanded-queue-list');
-  queueList.innerHTML = '';
+  if (queueList) {
+    queueList.innerHTML = '';
 
-  // Show next 5 songs
-  for (let i = 1; i <= 6; i++) {
-    const nextIndex = (appState.currentSongIndex + i) % appState.playlist.length;
-    const nextSong = appState.playlist[nextIndex];
+    // Show next 5 songs
+    for (let i = 1; i <= 6; i++) {
+      const nextIndex = (appState.currentSongIndex + i) % appState.playlist.length;
+      const nextSong = appState.playlist[nextIndex];
 
-    const item = document.createElement('div');
-    item.className = 'queue-item';
-    item.onclick = () => playSongAtIndex(nextIndex);
-    item.innerHTML = `
-      <img src="${nextSong.cover}" alt="Art">
-      <div class="queue-info">
-        <h5>${nextSong.title}</h5>
-        <p>${nextSong.artist}</p>
-      </div>
-    `;
-    queueList.appendChild(item);
+      const item = document.createElement('div');
+      item.className = 'queue-item';
+      item.onclick = () => playSongAtIndex(nextIndex);
+      item.innerHTML = `
+        <img src="${nextSong.cover}" alt="Art">
+        <div class="queue-info">
+          <h5>${nextSong.title}</h5>
+          <p>${nextSong.artist}</p>
+        </div>
+      `;
+      queueList.appendChild(item);
+    }
   }
 
   // Sync buttons
   updatePlayButton();
 }
-
-// Hook into loadSong to update Expanded UI if open
-const originalLoadSong = loadSong;
-loadSong = function (index) {
-  originalLoadSong(index);
-  updateExpandedPlayerUI();
-};
 
 // ==========================================
 // Store Modal Logic
@@ -1459,29 +1418,38 @@ window.addEventListener('click', (e) => {
   }
 });
 
-// Update Cart UI to include Checkout Button
-function updateCartUI_Enhanced() {
-  // Call original logic if needed, or just ensure the checkout button exists
-  // We need to inject the Checkout button into the cart panel footer
-  const cartFooter = document.querySelector('.cart-panel .panel-footer');
-  if (cartFooter && !cartFooter.querySelector('#checkout-btn-main')) {
-    // Clear existing or append?
-    cartFooter.innerHTML = `
-      <div class="cart-total">
-        <span>Total:</span>
-        <span id="cart-total-display">$0.00</span>
-      </div>
-      <button class="btn-primary btn-block" id="checkout-btn-main" onclick="openCheckout()">Checkout</button>
-    `;
-  }
-  // Let the original updateCartUI handle values, but we need to ensure this function runs
+// Side Panel Toggles
+function toggleCart() {
+  document.querySelector('.cart-panel').classList.toggle('active');
+  const overlay = document.querySelector('.overlay');
+  if (overlay) overlay.classList.toggle('active');
 }
 
-// Hook into updateCartUI by modifying it? 
-// Easier: Just Modify the updateCartUI function directly if possible, or
-// append a DOMObserver?
-// Best: Let's rewrite updateCartUI in the file if we can find it, 
-// OR just add the checkout button dynamically once on load.
+function toggleLibrary() {
+  document.querySelector('.library-panel').classList.toggle('active'); // If library panel exists
+}
+
+window.toggleCart = toggleCart; // Expose globally for HTML onclicks
+
+// ==========================================
+// UI Helpers
+// ==========================================
+function updateVolumeUI() {
+  const slider = document.getElementById('volume-slider');
+  const volumeBtn = document.getElementById('volume-btn');
+  if (slider) slider.value = appState.volume * 100;
+
+  // Update icon based on volume
+  if (volumeBtn) {
+    if (appState.volume === 0) {
+      volumeBtn.querySelector('i').className = 'ri-volume-mute-line';
+    } else if (appState.volume < 0.5) {
+      volumeBtn.querySelector('i').className = 'ri-volume-down-line';
+    } else {
+      volumeBtn.querySelector('i').className = 'ri-volume-up-line';
+    }
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   // Add Checkout Button to Cart Panel if not there
@@ -1496,3 +1464,5 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
   }
 });
+
+// End of Script
