@@ -3,10 +3,7 @@
  * Advanced JavaScript for Music Player, Visualizer, and Store Functionality
  */
 
-// Global Error Handler for Debugging
-window.onerror = function (msg, url, line, col, error) {
-  alert("Error: " + msg + "\nLine: " + line + "\nColumn: " + col);
-};
+
 
 // ==========================================
 // Application State & Configuration
