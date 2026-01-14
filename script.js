@@ -35,10 +35,7 @@ const songs = [
     artist: "M83",
     album: "Hurry Up, We're Dreaming",
     cover: "assets/images/MidnightCity.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3"
-    ],
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "4:03",
     category: ["popular", "electronic", "favorites"],
     price: 1.29
@@ -49,10 +46,7 @@ const songs = [
     artist: "The Weeknd",
     album: "After Hours",
     cover: "assets/images/BlindingLights.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3"
-    ],
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "3:20",
     category: ["popular", "pop"],
     price: 1.29
@@ -62,11 +56,8 @@ const songs = [
     title: "Levitating",
     artist: "Dua Lipa",
     album: "Future Nostalgia",
-    cover: "assets/images/Levitating.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3"
-    ],
+    cover: "assets/images/MidnightCity.jpg",
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "3:45",
     category: ["popular", "pop"],
     price: 1.29
@@ -77,10 +68,7 @@ const songs = [
     artist: "The Weeknd",
     album: "After Hours",
     cover: "assets/images/SaveYourTears.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3"
-    ],
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "3:35",
     category: ["popular", "pop"],
     price: 1.29
@@ -90,11 +78,8 @@ const songs = [
     title: "Stay",
     artist: "The Kid LAROI",
     album: "F*CK LOVE 3: OVER YOU",
-    cover: "assets/images/Stay.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3"
-    ],
+    cover: "assets/images/HeatWaves.jpg",
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "2:21",
     category: ["new", "pop"],
     price: 1.29
@@ -104,11 +89,8 @@ const songs = [
     title: "Bad Habit",
     artist: "Steve Lacy",
     album: "Gemini Rights",
-    cover: "assets/images/BadHabit.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3"
-    ],
+    cover: "assets/images/BlindingLights.jpg",
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "3:52",
     category: ["popular", "rock"],
     price: 1.29
@@ -119,10 +101,7 @@ const songs = [
     artist: "Glass Animals",
     album: "Dreamland",
     cover: "assets/images/HeatWaves.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"
-    ],
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "3:58",
     category: ["popular", "electronic"],
     price: 1.29
@@ -132,11 +111,8 @@ const songs = [
     title: "As It Was",
     artist: "Harry Styles",
     album: "Harry's House",
-    cover: "assets/images/AsItWas.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"
-    ],
+    cover: "assets/images/SaveYourTears.jpg",
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "2:47",
     category: ["new", "pop"],
     price: 1.29
@@ -146,11 +122,8 @@ const songs = [
     title: "Running Up That Hill",
     artist: "Kate Bush",
     album: "Hounds of Love",
-    cover: "assets/images/RunningUpThatHill.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"
-    ],
+    cover: "assets/images/MidnightCity.jpg",
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "4:58",
     category: ["popular", "rock"],
     price: 0.99
@@ -160,11 +133,8 @@ const songs = [
     title: "Glimpse of Us",
     artist: "Joji",
     album: "SMITHEREENS",
-    cover: "assets/images/GlimpseOfUs.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"
-    ],
+    cover: "assets/images/BlindingLights.jpg",
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "3:53",
     category: ["new", "pop"],
     price: 1.29
@@ -174,11 +144,8 @@ const songs = [
     title: "Break My Soul",
     artist: "Beyoncé",
     album: "RENAISSANCE",
-    cover: "assets/images/BreakMySoul.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"
-    ],
+    cover: "assets/images/HeatWaves.jpg",
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "4:38",
     category: ["new", "pop"],
     price: 1.29
@@ -188,11 +155,8 @@ const songs = [
     title: "About Damn Time",
     artist: "Lizzo",
     album: "Special",
-    cover: "assets/images/AboutDamnTime.jpg",
-    sources: [
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"
-    ],
+    cover: "assets/images/SaveYourTears.jpg",
+    sources: ["data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQAAAAA="],
     duration: "3:11",
     category: ["new", "pop"],
     price: 1.29
