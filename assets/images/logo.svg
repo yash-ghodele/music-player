@@ -10,94 +10,67 @@
       <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#0f0f1a;stop-opacity:1" />
     </linearGradient>
-
-    <!-- Glow Filter -->
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    
-    <!-- Strong Glow -->
-    <filter id="strongGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
   </defs>
 
   <!-- Background Circle -->
-  <circle cx="256" cy="256" r="240" fill="url(#darkBg)" stroke="url(#neonGradient)" stroke-width="4" opacity="0.8"/>
-  <circle cx="256" cy="256" r="230" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+  <circle cx="256" cy="256" r="240" fill="url(#darkBg)" stroke="url(#neonGradient)" stroke-width="8"/>
+  
+  <!-- Inner Ring (Decorative) -->
+  <circle cx="256" cy="256" r="200" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2" stroke-dasharray="10 10"/>
 
   <!-- Equalizer Bars (Circular) -->
-  <g stroke="url(#neonGradient)" stroke-width="8" stroke-linecap="round" filter="url(#glow)">
-    <!-- Top Right -->
-    <line x1="380" y1="150" x2="360" y2="170" opacity="0.6"/>
-    <line x1="410" y1="190" x2="385" y2="205" opacity="0.8"/>
-    <line x1="430" y1="240" x2="400" y2="245" opacity="1.0"/>
-    
-    <!-- Bottom Right -->
-    <line x1="430" y1="290" x2="400" y2="285" opacity="1.0"/>
-    <line x1="410" y1="340" x2="385" y2="325" opacity="0.8"/>
-    <line x1="380" y1="380" x2="360" y2="360" opacity="0.6"/>
+  <g stroke="url(#neonGradient)" stroke-width="12" stroke-linecap="round">
+    <!-- Right Side -->
+    <line x1="380" y1="150" x2="360" y2="170" />
+    <line x1="410" y1="190" x2="385" y2="205" />
+    <line x1="430" y1="240" x2="400" y2="245" />
+    <line x1="430" y1="290" x2="400" y2="285" />
+    <line x1="410" y1="340" x2="385" y2="325" />
+    <line x1="380" y1="380" x2="360" y2="360" />
 
-    <!-- Bottom Left -->
-    <line x1="132" y1="380" x2="152" y2="360" opacity="0.6"/>
-    <line x1="102" y1="340" x2="127" y2="325" opacity="0.8"/>
-    <line x1="82" y1="290" x2="112" y2="285" opacity="1.0"/>
-
-    <!-- Top Left -->
-    <line x1="82" y1="240" x2="112" y2="245" opacity="1.0"/>
-    <line x1="102" y1="190" x2="127" y2="205" opacity="0.8"/>
-    <line x1="132" y1="150" x2="152" y2="170" opacity="0.6"/>
+    <!-- Left Side -->
+    <line x1="132" y1="380" x2="152" y2="360" />
+    <line x1="102" y1="340" x2="127" y2="325" />
+    <line x1="82" y1="290" x2="112" y2="285" />
+    <line x1="82" y1="240" x2="112" y2="245" />
+    <line x1="102" y1="190" x2="127" y2="205" />
+    <line x1="132" y1="150" x2="152" y2="170" />
   </g>
 
-  <!-- Musical Note Accent -->
-  <path d="M320 120 L320 200 M320 140 Q 360 120, 360 160" 
+  <!-- Musical Note -->
+  <path d="M300 120 L300 200 M300 140 Q 340 120, 340 160" 
         stroke="url(#neonGradient)" 
-        stroke-width="12" 
+        stroke-width="14" 
         fill="none" 
         stroke-linecap="round"
-        filter="url(#strongGlow)"
-        transform="translate(-20, 20)"/>
+        transform="translate(-10, 10)"/>
 
   <!-- Center Waveform (NB stylized) -->
-  <g transform="translate(146, 176) scale(1.1)" filter="url(#strongGlow)">
-    <path d="M20 100 
-             Q 50 20, 80 100 
-             Q 100 180, 120 100 
-             T 180 100" 
+  <g transform="translate(146, 176) scale(1.1)">
+    <!-- N shape -->
+    <path d="M40 100 
+             L 40 40
+             L 100 100 
+             L 100 40" 
           fill="none" 
           stroke="url(#neonGradient)" 
-          stroke-width="16" 
+          stroke-width="18" 
           stroke-linecap="round" 
           stroke-linejoin="round"/>
           
+    <!-- B shape -->
     <path d="M120 100 
-             Q 140 20, 180 20 
-             Q 220 20, 220 60 
-             Q 220 100, 180 100
-             Q 220 100, 220 140
-             Q 220 180, 180 180
-             Q 140 180, 120 100" 
+             L 120 40
+             Q 160 40, 160 70
+             Q 160 100, 120 100
+             Q 160 100, 160 130
+             Q 160 160, 120 160
+             L 120 100" 
           fill="none" 
           stroke="url(#neonGradient)" 
-          stroke-width="16" 
+          stroke-width="18" 
           stroke-linecap="round" 
-          stroke-linejoin="round"/>
+          stroke-linejoin="round"
+          transform="translate(20, 0)"/>
   </g>
-
-  <!-- Glass Reflection -->
-  <path d="M116 116 A 200 200 0 0 1 396 116" 
-        fill="none" 
-        stroke="rgba(255,255,255,0.2)" 
-        stroke-width="20" 
-        stroke-linecap="round" 
-        opacity="0.5"
-        filter="url(#glow)"/>
 </svg>
