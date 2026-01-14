@@ -269,24 +269,24 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPlayerListeners();
   setupEventListeners();
 
-  // Remove loading overlay
+  // Remove loading overlay (fast!)
   setTimeout(() => {
     try {
       const overlay = document.getElementById('loading-overlay');
       if (overlay) {
         overlay.style.opacity = '0';
-        overlay.style.transition = 'opacity 0.5s';
+        overlay.style.transition = 'opacity 0.3s';
         setTimeout(() => {
           overlay.style.display = 'none';
           overlay.style.visibility = 'hidden';
-        }, 500);
+        }, 300);
       } else {
         console.warn('Loading overlay element not found');
       }
     } catch (e) {
       console.error('Error hiding loading overlay:', e);
     }
-  }, 1000);
+  }, 100); // Reduced from 1000ms to 100ms for instant loading
 });
 
 // ==========================================
