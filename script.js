@@ -253,6 +253,29 @@ const products = [
 // Initialization
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Load saved state from localStorage
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-mode');
+      const themeToggle = document.getElementById('theme-toggle');
+      const icon = themeToggle?.querySelector('i');
+      if (icon) icon.className = 'ri-sun-line';
+    }
+
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      appState.cart = JSON.parse(savedCart);
+    }
+
+    const savedFavorites = localStorage.getItem('favorites');
+    if (savedFavorites) {
+      appState.favorites = JSON.parse(savedFavorites);
+    }
+  } catch (e) {
+    console.warn('Failed to load saved state:', e);
+  }
+
   // Initialize state
   appState.playlist = [...songs];
   appState.originalPlaylist = [...songs];
@@ -439,21 +462,36 @@ function loadSong(index) {
 
   // Update favorite button
   const favBtn = document.getElementById('favorite-btn');
-  if (appState.favorites.includes(song.id)) {
-    favBtn.classList.add('active');
-    favBtn.querySelector('i').className = 'ri-heart-fill';
-  } else {
-    favBtn.classList.remove('active');
-    favBtn.querySelector('i').className = 'ri-heart-line';
+  const isFavorite = appState.favorites.includes(song.id);
+
+  if (favBtn) {
+    if (isFavorite) {
+      favBtn.classList.add('active');
+      favBtn.querySelector('i').className = 'ri-heart-fill';
+    } else {
+      favBtn.classList.remove('active');
+      favBtn.querySelector('i').className = 'ri-heart-line';
+    }
   }
 
-  // Setup media session
+  // Sync expanded player heart
+  const expandedHeart = document.getElementById('expanded-heart');
+  if (expandedHeart) {
+    expandedHeart.className = isFavorite ? 'ri-heart-fill' : 'ri-heart-line';
+  }
+
+  // Setup media session with multiple artwork sizes
   if ('mediaSession' in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: song.title,
       artist: song.artist,
       album: song.album,
-      artwork: [{ src: song.cover, sizes: '96x96', type: 'image/png' }]
+      artwork: [
+        { src: song.cover, sizes: '96x96', type: 'image/jpeg' },
+        { src: song.cover, sizes: '128x128', type: 'image/jpeg' },
+        { src: song.cover, sizes: '256x256', type: 'image/jpeg' },
+        { src: song.cover, sizes: '512x512', type: 'image/jpeg' }
+      ]
     });
   }
 
@@ -744,7 +782,7 @@ function setupPlayerListeners() {
   // Visualizer toggle
   document.getElementById('visualizer-btn').addEventListener('click', () => {
     const panel = document.getElementById('visualizer-panel');
-    panel.classList.add('panel-open');
+    panel.classList.add('active');
     appState.visualizerActive = true;
 
     if (!appState.audioContext) {
@@ -897,6 +935,38 @@ function setupEventListeners() {
 
   const closeCartBtn = document.getElementById('close-cart');
   if (closeCartBtn) closeCartBtn.addEventListener('click', toggleCart);
+
+  // Checkout Button
+  const checkoutBtn = document.getElementById('checkout-btn');
+  if (checkoutBtn) checkoutBtn.addEventListener('click', openCheckout);
+
+  // Clear Queue Button
+  const clearQueueBtn = document.getElementById('clear-queue');
+  if (clearQueueBtn) {
+    clearQueueBtn.addEventListener('click', () => {
+      appState.queue = [];
+      updateQueue();
+      showNotification('Queue cleared', 'info');
+    });
+  }
+
+  // Theme Toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+
+      // Update icon
+      const icon = themeToggle.querySelector('i');
+      if (icon) {
+        icon.className = isLight ? 'ri-sun-line' : 'ri-moon-line';
+      }
+
+      showNotification(`${isLight ? 'Light' : 'Dark'} mode activated`, 'success');
+    });
+  }
 }
 
 // ==========================================
