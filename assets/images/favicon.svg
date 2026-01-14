@@ -1,14 +1,11 @@
 <svg
-  width="280"
+  width="90"
   height="90"
-  viewBox="0 0 280 90"
+  viewBox="0 0 90 90"
   xmlns="http://www.w3.org/2000/svg"
   role="img"
-  aria-label="Neon Beats Logo"
+  aria-label="Neon Beats Icon"
 >
-  <title>Neon Beats</title>
-  <desc>Neon Beats – Premium Music Store and Player</desc>
-
   <!-- Neon Glow -->
   <defs>
     <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
@@ -18,12 +15,6 @@
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-
-    <!-- Brand Gradient -->
-    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#7209b7"/>
-      <stop offset="100%" stop-color="#f72585"/>
-    </linearGradient>
   </defs>
 
   <!-- Outer Circle (Vinyl / Logo Base) -->
@@ -96,28 +87,4 @@
   <line x1="53" y1="27" x2="45" y2="49" stroke="#ffffff" stroke-width="0.6"/>
   <line x1="54" y1="27" x2="46" y2="49" stroke="#ffffff" stroke-width="0.6"/>
   <line x1="55" y1="27" x2="47" y2="49" stroke="#ffffff" stroke-width="0.6"/>
-
-  <!-- Brand Name -->
-  <text
-    x="85"
-    y="42"
-    font-size="26"
-    font-weight="700"
-    fill="url(#brandGradient)"
-    font-family="Segoe UI, Arial, sans-serif"
-  >
-    Neon Beats
-  </text>
-
-  <!-- Slogan -->
-  <text
-    x="85"
-    y="64"
-    font-size="11"
-    fill="#b3b3b3"
-    font-family="Segoe UI, Arial, sans-serif"
-    letter-spacing="0.6"
-  >
-    Feel the Rhythm. Live the Sound.
-  </text>
 </svg>
