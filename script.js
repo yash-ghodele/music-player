@@ -3,8 +3,6 @@
  * Advanced JavaScript for Music Player, Visualizer, and Store Functionality
  */
 
-
-
 // ==========================================
 // Application State & Configuration
 // ==========================================
