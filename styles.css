@@ -1247,7 +1247,7 @@ section {
   display: block;
 }
 
-.remove-item {
+.remove-btn {
   color: var(--error);
   font-size: 0.8rem;
   cursor: pointer;
@@ -1256,7 +1256,7 @@ section {
   padding: 0;
 }
 
-.remove-item:hover {
+.remove-btn:hover {
   text-decoration: underline;
 }
 
@@ -1266,10 +1266,6 @@ section {
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 1rem;
-}
-
-.btn-block {
-  width: 100%;
 }
 
 /* Visualizer Specifics */
@@ -1283,7 +1279,7 @@ section {
   transition: top 0.5s ease;
 }
 
-.visualizer-panel.panel-open {
+.visualizer-panel.active {
   top: 0 !important;
   right: 0 !important;
 }
