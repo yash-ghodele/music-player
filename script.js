@@ -276,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize UI
   renderSongs();
+  renderProducts(); // Render products on load
   updateCartUI();
   updateVolumeUI();
 
