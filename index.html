@@ -228,64 +228,72 @@
     </div>
   </section>
 
-  <!-- Contact Section (Merged with Newsletter) -->
-  <section class="contact-section" id="contact">
+  <!-- Contact Section (Redesigned) -->
+  <section class="contact-section-redesign" id="contact">
     <div class="container">
-      <div class="section-header">
-        <h2>Stay in the Loop</h2>
-        <p>Subscribe to get the latest music releases, exclusive offers, or send us a message.</p>
-      </div>
-      
-      <!-- Newsletter Subscription -->
-      <div class="newsletter-content" style="max-width: 600px; margin: 0 auto 3rem auto;">
-        <form class="newsletter-form" id="newsletter-form">
-          <input type="email" placeholder="Enter your email for updates" required id="newsletter-email">
-          <button type="submit" class="btn-primary">Subscribe</button>
+      <!-- Hero Newsletter -->
+      <div class="newsletter-hero">
+        <div class="newsletter-glow"></div>
+        <h2 class="gradient-text">Stay in the Loop</h2>
+        <p>Get exclusive music drops, special offers, and insider access delivered to your inbox.</p>
+        <form class="newsletter-form-hero" id="newsletter-form">
+          <div class="input-group-hero">
+            <i class="ri-mail-line"></i>
+            <input type="email" placeholder="Enter your email" required id="newsletter-email">
+            <button type="submit" class="btn-primary">Subscribe</button>
+          </div>
         </form>
+        <p class="newsletter-note">🔒 We respect your privacy. Unsubscribe anytime.</p>
       </div>
 
-      <div class="contact-grid">
-        <!-- Contact Info -->
-        <div class="contact-info glass-panel">
-          <div class="contact-item">
-            <div class="icon-box"><i class="ri-map-pin-2-fill"></i></div>
-            <div>
-              <h3>Visit Us</h3>
+      <!-- Contact Grid -->
+      <div class="contact-wrapper">
+        <div class="contact-header-text">
+          <h3>Or reach out directly</h3>
+          <p>Have a question? We're here to help.</p>
+        </div>
+        
+        <div class="contact-grid-redesign">
+          <!-- Quick Contact Cards -->
+          <div class="quick-contact-cards">
+            <div class="quick-card glass-panel">
+              <div class="quick-icon"><i class="ri-map-pin-2-fill"></i></div>
+              <h4>Visit</h4>
               <p>123 Music Street<br>New York, NY 10001</p>
             </div>
-          </div>
-          <div class="contact-item">
-            <div class="icon-box"><i class="ri-mail-send-fill"></i></div>
-            <div>
-              <h3>Email Us</h3>
-              <p>support@neonbeats.com<br>info@neonbeats.com</p>
+            <div class="quick-card glass-panel">
+              <div class="quick-icon"><i class="ri-mail-send-fill"></i></div>
+              <h4>Email</h4>
+              <p>support@neonbeats.com</p>
+            </div>
+            <div class="quick-card glass-panel">
+              <div class="quick-icon"><i class="ri-phone-fill"></i></div>
+              <h4>Call</h4>
+              <p>+1 (555) 123-4567</p>
             </div>
           </div>
-          <div class="contact-item">
-            <div class="icon-box"><i class="ri-phone-fill"></i></div>
-            <div>
-              <h3>Call Us</h3>
-              <p>+1 (555) 123-4567<br>Mon-Fri, 9am - 6pm</p>
-            </div>
+
+          <!-- Message Form -->
+          <div class="message-form-card glass-panel">
+            <h4>Send us a message</h4>
+            <form id="contact-form">
+              <div class="form-row-inline">
+                <div class="form-group">
+                  <input type="text" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                  <input type="email" placeholder="Your Email" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <textarea rows="4" placeholder="How can we help you?" required></textarea>
+              </div>
+              <button type="submit" class="btn-primary btn-block">
+                <i class="ri-send-plane-fill"></i> Send Message
+              </button>
+            </form>
           </div>
         </div>
-
-        <!-- Contact Form -->
-        <form class="contact-form glass-panel" id="contact-form">
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text" placeholder="Your Name" required>
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" placeholder="your@email.com" required>
-          </div>
-          <div class="form-group">
-            <label>Message</label>
-            <textarea rows="5" placeholder="How can we help?" required></textarea>
-          </div>
-          <button type="submit" class="btn-primary btn-block">Send Message</button>
-        </form>
       </div>
     </div>
   </section>
