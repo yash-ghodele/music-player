@@ -690,6 +690,12 @@ function updateProgress(e) {
     circle.style.strokeDashoffset = offset;
   }
 
+  // Expanded Player Linear Progress Bar
+  const expandedProgressFill = document.getElementById('expanded-progress-fill');
+  if (expandedProgressFill) {
+    expandedProgressFill.style.width = `${progressPercent}%`;
+  }
+
   // Expanded Time Display
   const expTime = document.getElementById('expanded-time');
   if (expTime) expTime.textContent = formatTime(currentTime);
@@ -945,6 +951,77 @@ function setupPlayerListeners() {
         updateVolumeUI();
       }
     });
+  }
+
+  // Expanded Progress Bar Click
+  const expandedProgressBar = document.getElementById('expanded-progress-bar');
+  if (expandedProgressBar) {
+    expandedProgressBar.addEventListener('click', function (e) {
+      const width = this.clientWidth;
+      const clickX = e.offsetX;
+      const duration = audio.duration;
+
+      if (isNaN(duration)) return;
+
+      audio.currentTime = (clickX / width) * duration;
+    });
+  }
+
+  // Settings Menu Toggle
+  const settingsBtn = document.getElementById('settings-btn');
+  const settingsDropdown = document.getElementById('settings-dropdown');
+
+  if (settingsBtn && settingsDropdown) {
+    settingsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = settingsDropdown.style.display === 'block';
+      settingsDropdown.style.display = isVisible ? 'none' : 'block';
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      settingsDropdown.style.display = 'none';
+    });
+
+    settingsDropdown.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent closing when clicking inside
+    });
+
+    // Settings handlers with localStorage
+    const audioQuality = document.getElementById('audio-quality');
+    const crossfadeToggle = document.getElementById('crossfade-toggle');
+    const normalizeToggle = document.getElementById('normalize-toggle');
+
+    if (audioQuality) {
+      // Load saved setting
+      const savedQuality = localStorage.getItem('audioQuality');
+      if (savedQuality) audioQuality.value = savedQuality;
+
+      audioQuality.addEventListener('change', () => {
+        localStorage.setItem('audioQuality', audioQuality.value);
+        showNotification(`Audio quality: ${audioQuality.value}`, 'info');
+      });
+    }
+
+    if (crossfadeToggle) {
+      const savedCrossfade = localStorage.getItem('crossfade') === 'true';
+      crossfadeToggle.checked = savedCrossfade;
+
+      crossfadeToggle.addEventListener('change', () => {
+        localStorage.setItem('crossfade', crossfadeToggle.checked);
+        showNotification(`Crossfade ${crossfadeToggle.checked ? 'enabled' : 'disabled'}`, 'info');
+      });
+    }
+
+    if (normalizeToggle) {
+      const savedNormalize = localStorage.getItem('normalize') === 'true';
+      normalizeToggle.checked = savedNormalize;
+
+      normalizeToggle.addEventListener('change', () => {
+        localStorage.setItem('normalize', normalizeToggle.checked);
+        showNotification(`Volume normalization ${normalizeToggle.checked ? 'enabled' : 'disabled'}`, 'info');
+      });
+    }
   }
 }
 

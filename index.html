@@ -502,9 +502,35 @@
         <span>PLAYING FROM PLAYLIST</span>
         <span class="playlist-name">Daily Mix</span>
       </div>
-      <button class="icon-btn" title="Settings">
+      <button class="icon-btn" id="settings-btn" title="Settings">
         <i class="ri-settings-3-line"></i>
       </button>
+      <div class="settings-dropdown" id="settings-dropdown" style="display: none;">
+        <div class="settings-item">
+          <span>Audio Quality</span>
+          <select id="audio-quality">
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div class="settings-item">
+          <label>
+            <input type="checkbox" id="crossfade-toggle">
+            <span>Crossfade</span>
+          </label>
+        </div>
+        <div class="settings-item">
+          <label>
+            <input type="checkbox" id="normalize-toggle">
+            <span>Normalize Volume</span>
+          </label>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-item">
+          <span class="settings-info">Neon Beats v1.0</span>
+        </div>
+      </div>
     </div>
     
     <div class="expanded-body">
@@ -532,7 +558,12 @@
           
           <div class="bottom-controls">
             <button class="orbit-btn shuffle" id="expanded-shuffle-btn" onclick="toggleShuffle()"><i class="ri-shuffle-line"></i></button>
-            <span class="time-display" id="expanded-time">0:00</span>
+            <div class="expanded-progress-container">
+              <div class="expanded-progress-bar" id="expanded-progress-bar">
+                <div class="expanded-progress-fill" id="expanded-progress-fill"></div>
+              </div>
+              <span class="time-display" id="expanded-time">0:00</span>
+            </div>
             <button class="orbit-btn repeat" id="expanded-repeat-btn" onclick="toggleRepeat()"><i class="ri-repeat-2-line"></i></button>
           </div>
         </div>
