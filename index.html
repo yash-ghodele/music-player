@@ -23,7 +23,7 @@
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <div class="nav-logo">
-        <img src="assets/images/logo.png" alt="Neon Beats Logo" style="width: 32px; height: 32px; margin-right: 0.5rem;">
+        <img loading="lazy" src="assets/images/logo.png" alt="Neon Beats Logo" style="width: 32px; height: 32px; margin-right: 0.5rem;">
         <span>Neon Beats</span>
       </div>
       
@@ -177,8 +177,15 @@
   <section class="about-section" id="about">
     <div class="container">
       <div class="bento-header">
-        <h2>Experience the Future</h2>
-        <p>More than just a player. It's a sonic revolution.</p>
+        <h2>Our Mission</h2>
+        <div class="about-story" style="max-width: 800px; margin: 0 auto 3rem auto; color: var(--text-secondary); line-height: 1.8;">
+          <p style="margin-bottom: 1rem;">
+            At <strong>Neon Beats</strong>, we believe music isn't just sound—it's an experience. Our mission is to bridge the gap between audiophile-grade quality and digital convenience.
+          </p>
+          <p>
+            Born in the heart of the digital revolution, we curate only the finest instruments and provide a streaming platform that honors the artist's original vision. Whether you're a creator or a listener, Neon Beats is your home for sonic excellence.
+          </p>
+        </div>
       </div>
 
       <div class="bento-grid">
@@ -230,6 +237,59 @@
         <form class="newsletter-form" id="newsletter-form">
           <input type="email" placeholder="Enter your email" required id="newsletter-email">
           <button type="submit" class="btn-primary">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <h2>Get in Touch</h2>
+        <p>We'd love to hear from you. Visit our store or send us a message.</p>
+      </div>
+      <div class="contact-grid">
+        <!-- Contact Info -->
+        <div class="contact-info glass-panel">
+          <div class="contact-item">
+            <div class="icon-box"><i class="ri-map-pin-2-fill"></i></div>
+            <div>
+              <h3>Visit Us</h3>
+              <p>123 Music Street<br>New York, NY 10001</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="icon-box"><i class="ri-mail-send-fill"></i></div>
+            <div>
+              <h3>Email Us</h3>
+              <p>support@neonbeats.com<br>info@neonbeats.com</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="icon-box"><i class="ri-phone-fill"></i></div>
+            <div>
+              <h3>Call Us</h3>
+              <p>+1 (555) 123-4567<br>Mon-Fri, 9am - 6pm</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <form class="contact-form glass-panel" id="contact-form">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" placeholder="Your Name" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea rows="5" placeholder="How can we help?" required></textarea>
+          </div>
+          <button type="submit" class="btn-primary btn-block">Send Message</button>
         </form>
       </div>
     </div>
@@ -293,7 +353,7 @@
   <!-- Music Player (Fixed Bottom) -->
   <div class="music-player" id="music-player">
     <div class="player-left">
-      <img src="assets/images/MidnightCity.jpg" alt="Album Cover" class="player-cover" id="player-cover">
+      <img loading="lazy" src="assets/images/MidnightCity.jpg" alt="Album Cover" class="player-cover" id="player-cover">
       <div class="player-info">
         <div class="player-title" id="player-title">Select a song</div>
         <div class="player-artist" id="player-artist">Artist</div>

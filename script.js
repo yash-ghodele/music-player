@@ -353,7 +353,7 @@ function renderSongs() {
 
     card.innerHTML = `
       <div class="song-image-container">
-        <img src="${song.cover}" alt="${song.title}" class="song-image" loading="lazy">
+        <img loading="lazy" src="${song.cover}" alt="${song.title}" class="song-image" loading="lazy">
         <div class="play-overlay">
           <i class="ri-play-fill" style="font-size: 2rem; color: white;"></i>
         </div>
@@ -394,7 +394,7 @@ function renderProducts(filter = 'all') {
 
     card.innerHTML = `
       <div class="product-image">
-        <img src="${product.image}" alt="${product.title}" loading="lazy">
+        <img loading="lazy" src="${product.image}" alt="${product.title}" loading="lazy">
         <div class="product-overlay">
           <button type="button" class="btn-icon" onclick="addToCart('${product.id}')" title="Add to Cart">
             <i class="ri-shopping-cart-2-line"></i>
@@ -1038,7 +1038,7 @@ function renderQueue() {
   if (currentSong) {
     currentContainer.innerHTML = `
       <div class="queue-item playing">
-        <img src="${currentSong.cover}" alt="cover">
+        <img loading="lazy" src="${currentSong.cover}" alt="cover">
         <div class="queue-info">
           <h5>${currentSong.title}</h5>
           <p>${currentSong.artist}</p>
@@ -1059,7 +1059,7 @@ function renderQueue() {
     const item = document.createElement('div');
     item.className = 'queue-item';
     item.innerHTML = `
-      <img src="${song.cover}" alt="cover">
+      <img loading="lazy" src="${song.cover}" alt="cover">
       <div class="queue-info">
         <h5>${song.title}</h5>
         <p>${song.artist}</p>
@@ -1117,7 +1117,7 @@ function updateCartUI() {
     const cartItem = document.createElement('div');
     cartItem.className = 'cart-item';
     cartItem.innerHTML = `
-      <img src="${item.image}" alt="${item.title}">
+      <img loading="lazy" src="${item.image}" alt="${item.title}">
       <div class="cart-item-info">
         <h4>${item.title}</h4>
         <div class="cart-item-price">$${item.price.toLocaleString()} x ${item.quantity}</div>
@@ -1338,7 +1338,7 @@ function updateExpandedPlayerUI() {
       item.className = 'queue-item';
       item.onclick = () => playSongAtIndex(nextIndex);
       item.innerHTML = `
-        <img src="${nextSong.cover}" alt="Art">
+        <img loading="lazy" src="${nextSong.cover}" alt="Art">
         <div class="queue-info">
           <h5>${nextSong.title}</h5>
           <p>${nextSong.artist}</p>
@@ -1367,6 +1367,53 @@ function openQuickView(id) {
 
   // Rating stars
   document.getElementById('qv-rating').innerHTML = getStarRating(product.rating);
+
+  // Audio Demo Button (New)
+  const infoContainer = document.querySelector('.quick-view-info');
+  // Remove existing demo btn if any
+  const oldDemo = document.getElementById('qv-demo-btn');
+  if (oldDemo) oldDemo.remove();
+
+  const demoBtn = document.createElement('button');
+  demoBtn.id = 'qv-demo-btn';
+  demoBtn.className = 'btn-secondary btn-sm';
+  demoBtn.style.marginTop = '1rem';
+  demoBtn.innerHTML = '<i class="ri-play-circle-line"></i> Audio Preview';
+  demoBtn.onclick = () => {
+    const audio = new Audio('assets/audio/sample.mp3');
+    audio.volume = 0.5;
+    audio.play();
+    demoBtn.innerHTML = '<i class="ri-volume-up-line"></i> Playing...';
+    setTimeout(() => {
+      audio.pause();
+      demoBtn.innerHTML = '<i class="ri-play-circle-line"></i> Audio Preview';
+    }, 5000); // 5s preview
+  };
+
+  // Insert before description
+  const desc = document.getElementById('qv-description');
+  infoContainer.insertBefore(demoBtn, desc);
+
+  // Mock Reviews
+  const reviewsList = document.getElementById('qv-reviews-list');
+  if (reviewsList) {
+    reviewsList.innerHTML = `
+        <div class="review-item">
+            <div class="review-header">
+                <strong>Alex M.</strong>
+                <span class="stars">${getStarRating(5)}</span>
+            </div>
+            <p>"Absolutely stunning quality. Worth every penny!"</p>
+        </div>
+        <div class="review-item">
+            <div class="review-header">
+                <strong>Sarah J.</strong>
+                <span class="stars">${getStarRating(4)}</span>
+            </div>
+            <p>"Great sound, fast shipping using Neon Beats."</p>
+        </div>
+      `;
+  }
 
   // Bind Add Button
   const addBtn = document.getElementById('qv-add-btn');
@@ -1488,3 +1535,26 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // End of Script
+
+// Contact Form Handler
+document.addEventListener('DOMContentLoaded', () => {
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = contactForm.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      // Simulate API call
+      setTimeout(() => {
+        showNotification('Message sent successfully! We will get back to you soon.', 'success');
+        contactForm.reset();
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }, 1500);
+    });
+  }
+});
