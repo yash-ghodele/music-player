@@ -38,8 +38,19 @@ A centralized state object tracks:
 
 ## Data Persistence
 The app uses the browser's `localStorage` to save:
-- **`neon_favorites`**: IDs of liked songs.
-- **`neon_cart`**: Current shopping cart contents.
-- **`neon_volume`**: Last used volume level.
+- **`neon_favorites`**: IDs of liked songs
+- **`neon_cart`**: Current shopping cart contents
+- **`neon_volume`**: Last used volume level
+- **`audioQuality`**: Selected audio quality (high/medium/low)
+- **`crossfade`**: Crossfade enabled/disabled state
+- **`normalize`**: Volume normalization enabled/disabled state
 
 This ensures a continuity of experience across reloads.
+
+## Recent Improvements (v1.0)
+- Enhanced keyboard shortcuts with volume control and playback toggles
+- Download and share functionality using Web Share API
+- Settings menu with persistent user preferences
+- Improved expanded player with clickable progress bar
+- Quick action buttons for playlist management
+- Fixed panel close button reliability

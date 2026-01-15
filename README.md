@@ -7,7 +7,10 @@ A beautiful, modern music player and store built with vanilla HTML, CSS, and Jav
 ## ✨ Features
 
 - 🎵 **Music Player** - Play, pause, skip, shuffle, and repeat
-- 🎨 **Expanded Player** - Full-screen player with circular progress ring
+- 🎨 **Expanded Player** - Full-screen player with circular progress ring and volume controls
+- ⌨️ **Keyboard Shortcuts** - Complete keyboard control (Space, Arrows, M, S, R)
+- 📥 **Download & Share** - Download tracks and share via Web Share API
+- 🎛️ **Settings Menu** - Audio quality, crossfade, and volume normalization
 - 🔍 **Search & Filter** - Find songs by title, artist, or album
 - 📁 **Local Music Import** - Add your own music files with thumbnail support
 - 🎧 **Audio Visualizer** - Real-time frequency visualization
@@ -46,8 +49,13 @@ Music Player/
 ├── server.py           # Local HTTP server (Python)
 ├── START_SERVER.bat    # Easy launcher for Windows
 ├── README.md           # This file
+├── docs/               # Documentation files
+│   ├── USER_GUIDE.md   # User manual
+│   ├── ARCHITECTURE.md # Technical architecture
+│   └── FEATURES.md     # Detailed feature list
 └── assets/
-    └── images/         # Album covers and product images
+    ├── images/         # Album covers and product images
+    └── audio/          # Music files
 ```
 
 ## 🎮 How to Use
@@ -60,7 +68,8 @@ Music Player/
 
 ### Expanded Player
 - **Click Album Art** in the bottom player to open full-screen mode
-- Features: Circular progress ring, visualizer, queue preview
+- Features: Circular progress ring, clickable progress bar, volume controls, visualizer
+- **Settings**: Click gear icon for audio quality, crossfade, and normalize options
 - **Click Minimize** (top-left) to return to normal view
 
 ### Adding Local Music
@@ -76,9 +85,17 @@ Music Player/
 4. **Checkout** when ready to purchase
 
 ### Keyboard Shortcuts
-- `Space` - Play/Pause
-- `→` - Next song
-- `←` - Previous song
+
+| Key | Action |
+|-----|--------|
+| **Space** | Play/Pause |
+| **→** | Next song |
+| **←** | Previous song |
+| **↑** | Volume up |
+| **↓** | Volume down |
+| **M** | Mute/Unmute |
+| **S** | Shuffle toggle |
+| **R** | Repeat cycle (off → all → one) |
 
 ## 🛠️ Technical Details
 
