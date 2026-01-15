@@ -11,6 +11,8 @@ A beautiful, modern music player and store built with vanilla HTML, CSS, and Jav
 - ⌨️ **Keyboard Shortcuts** - Complete keyboard control (Space, Arrows, M, S, R)
 - 📥 **Download & Share** - Download tracks and share via Web Share API
 - 🎛️ **Settings Menu** - Audio quality, crossfade, and volume normalization
+- 🔄 **Audio Fallback** - Automatic fallback to sample audio when files are missing
+- 📝 **Comprehensive Documentation** - Fully commented codebase for easy understanding
 - 🔍 **Search & Filter** - Find songs by title, artist, or album
 - 📁 **Local Music Import** - Add your own music files with thumbnail support
 - 🎧 **Audio Visualizer** - Real-time frequency visualization

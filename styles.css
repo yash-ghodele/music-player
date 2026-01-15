@@ -1680,13 +1680,38 @@ section {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
+  background: #1a1a2e; /* Fallback */
   z-index: 4000;
   display: flex;
   flex-direction: column;
   transition: top 0.5s cubic-bezier(0.76, 0, 0.24, 1);
   overflow: hidden;
   color: white;
+}
+
+.player-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(26, 26, 46, 0.5) 0%, rgba(15, 15, 26, 0.95) 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Updated Blurred Album Art Background */
+.album-art-background {
+  position: absolute;
+  inset: -50px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(60px) brightness(0.4);
+  opacity: 0;
+  transition: opacity 1s ease, background-image 1s ease;
+  z-index: -2;
+}
+
+/* Show background when active */
+.expanded-player.active .album-art-background {
+  opacity: 0.6;
 }
 
 .expanded-player.active {
@@ -2434,4 +2459,253 @@ section {
   .input-group-hero button { width: 100%; }
   .contact-grid-redesign { grid-template-columns: 1fr; }
   .form-row-inline { grid-template-columns: 1fr; }
+}
+
+/* ==========================================
+ * EXPANDED PLAYER ENHANCEMENTS (Phase 1 & 2)
+ * Larger album art, waveform, action buttons
+ * ========================================== */
+
+/* Enhanced Album Art with Larger Size */
+.art-container {
+  width: 320px !important;
+  height: 320px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 40px rgba(247, 37, 133, 0.3) !important;
+  transition: transform 0.3s ease !important;
+  overflow: visible !important;
+}
+
+.art-container:hover {
+  transform: scale(1.02) !important;
+}
+
+/* Album Art Reflection Effect */
+.art-reflection {
+  position: absolute;
+  bottom: -15px;
+  left: 5%;
+  width: 90%;
+  height: 20px;
+  background: radial-gradient(ellipse at center, rgba(247, 37, 133, 0.3) 0%, transparent 70%);
+  filter: blur(10px);
+  opacity: 0.6;
+  z-index: -1;
+}
+
+
+/* Vinyl Rotation Animation */
+.playing #expanded-art {
+  animation: vinyl-spin 20s linear infinite;
+}
+
+@keyframes vinyl-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Updated Progress Ring for 400px */
+.progress-ring__circle {
+  stroke-dasharray: 1193.8 1193.8 !important;
+  stroke-dashoffset: 1193.8 !important;
+}
+
+/* Waveform Progress Container */
+.waveform-progress-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  max-width: 500px;
+}
+
+.waveform-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 50px;
+ flex: 1;
+  cursor: pointer;
+  padding: 5px 0;
+  position: relative;
+}
+
+.waveform-bar {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  transition: background 0.2s ease, transform 0.1s ease;
+  min-width: 2px;
+}
+
+.waveform-bar:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scaleY(1.1);
+}
+
+.waveform-bar.active {
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
+}
+
+.waveform-bar.passed {
+  background: rgba(247, 37, 133, 0.5);
+}
+
+/* Enhanced Typography */
+.expanded-title-large {
+  font-size: 3rem !important;
+  font-weight: 900 !important;
+  margin-bottom: 0.5rem !important;
+  background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--accent) 100%);
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.expanded-artist-large {
+  font-size: 1.5rem !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 400 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.expanded-album-name {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 2rem;
+}
+
+/* Enhanced Action Buttons Row */
+.expanded-actions {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.action-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  backdrop-filter: blur(10px);
+}
+
+.action-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(247, 37, 133, 0.4);
+}
+
+.action-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.action-btn .ri-heart-fill {
+  color: var(--primary);
+}
+
+/* Touch Gesture Indicators */
+.swipe-indicator {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: var(--border-radius-md);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+.swipe-indicator.left {
+  left: 2rem;
+}
+
+.swipe-indicator.right {
+  right: 2rem;
+}
+
+.swipe-indicator.active {
+  opacity: 1;
+}
+
+/* Adjust track info spacing */
+.track-info-large {
+  margin-top: 3rem !important;
+}
+
+/* Enhanced Center Play Button */
+.center-play-btn {
+  width: 80px !important;
+  height: 80px !important;
+  font-size: 2.5rem !important;
+  box-shadow: 0 0 30px rgba(247, 37, 133, 0.8) !important;
+}
+
+.center-play-btn:hover {
+  transform: scale(1.15) !important;
+  box-shadow: 0 0 40px rgba(247, 37, 133, 1) !important;
+}
+
+/* Update bottom controls positioning */
+.bottom-controls {
+  bottom: -60px !important;
+  gap: 1.5rem !important;
+}
+
+/* Mobile Responsiveness for Enhanced Player */
+@media (max-width: 900px) {
+  .art-container {
+    width: 250px !important;
+    height: 250px !important;
+  }
+  
+  .expanded-title-large {
+    font-size: 2rem !important;
+  }
+  
+  .expanded-artist-large {
+    font-size: 1.2rem !important;
+  }
+  
+  .waveform-container {
+    height: 40px;
+  }
+  
+  .action-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+  
+  .expanded-actions {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .expanded-title-large {
+    font-size: 1.5rem !important;
+  }
+  
+  .expanded-artist-large {
+    font-size: 1rem !important;
+  }
 }

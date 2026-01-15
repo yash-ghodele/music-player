@@ -216,10 +216,29 @@ All settings and preferences are saved to browser localStorage:
 - **LocalStorage API**: State persistence
 
 ### Error Handling
-- **Fallback Audio Sources**: Multiple sources per song
-- **Graceful Degradation**: Features fail silently
-- **User Notifications**: Toast messages for actions
-- **Console Logging**: Debug information for developers
+- **Universal Audio Fallback**: Automatic fallback to sample.mp3 when song files are missing
+  - Three-tier system: Try all sources → Universal fallback → Error notification
+  - User-friendly notifications when original files unavailable
+  - Seamless playback experience (no dead silence)
+  - Debug logging for troubleshooting
+- **Graceful Degradation**: Features fail silently without breaking UI
+- **User Notifications**: Toast messages for all actions
+- **Console Logging**: Comprehensive debug information for developers
+
+### Code Documentation
+- **JSDoc Comments**: All JavaScript functions documented with:
+  - Purpose and behavior descriptions
+  - Parameter types and descriptions
+  - Return value documentation
+  - Usage examples where relevant
+- **HTML Section Comments**: Major components clearly labeled
+  - Navigation, Hero, Store, Library sections
+  - Player components and panels
+  - Modals and overlays
+- **CSS Documentation**: Theme philosophy and design tokens explained
+  - Custom properties grouped by category
+  - Glassmorphism techniques documented
+  - Responsive design patterns noted
 
 ---
 
@@ -258,6 +277,8 @@ Located in main player left section, next to favorite/download/share:
 - Local music import
 - Shopping cart
 - Product catalog
+- **Universal audio fallback system** (NEW)
+- **Comprehensive code documentation** (NEW)
 
 ### 🚧 Planned Enhancements
 - Playlist creation and management

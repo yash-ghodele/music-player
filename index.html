@@ -8,10 +8,10 @@
   <title>Neon Beats - Premium Music Store & Player</title>
   
   
-  <!-- Icon Library - Required for UI -->
+  <!-- Icon Library - RemixIcon for consistent UI icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   
-  <!-- Custom CSS -->
+  <!-- Custom Styles - Main CSS file -->
   <link rel="stylesheet" href="styles.css">
   
   <!-- Favicon -->
@@ -19,14 +19,20 @@
 </head>
 <body>
   
-  <!-- Navigation -->
+  <!-- ==========================================
+       NAVIGATION BAR
+       Fixed top navigation with logo, menu links,
+       shopping cart, and sign in button
+       ========================================== -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
+      <!-- Logo with gradient text -->
       <div class="nav-logo">
         <img loading="lazy" src="assets/images/logo.png" alt="Neon Beats Logo" style="width: 32px; height: 32px; margin-right: 0.5rem;">
         <span class="gradient-text">Neon Beats</span>
       </div>
       
+      <!-- Main Navigation Links -->
       <ul class="nav-menu" id="nav-menu">
         <li><a href="#home" class="nav-link active">Home</a></li>
         <li><a href="#store" class="nav-link">Store</a></li>
@@ -35,6 +41,7 @@
         <li><a href="#about" class="nav-link">About</a></li>
       </ul>
       
+      <!-- Navigation Actions: Cart and Login -->
       <div class="nav-actions">
         <button class="btn-icon cart-btn" id="cart-btn" title="Shopping Cart">
           <i class="ri-shopping-cart-2-line"></i>
@@ -48,7 +55,11 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
+  <!-- ==========================================
+       HERO SECTION
+       Full-screen landing section with title,
+       description, CTA buttons, and stats
+       ========================================== -->
   <section class="hero" id="home">
     <div class="hero-background"></div>
     <div class="hero-content">
@@ -60,6 +71,7 @@
         Experience music like never before with our premium collection of tracks and instruments.
         Discover, play, and own the beats that move you.
       </p>
+      <!-- Call-to-Action Buttons -->
       <div class="hero-buttons">
         <a href="#library" class="btn-large btn-primary">
           <i class="ri-play-circle-line"></i>
@@ -71,7 +83,7 @@
         </a>
       </div>
       
-      <!-- Stats -->
+      <!-- Platform Statistics -->
       <div class="hero-stats">
         <div class="stat-item">
           <div class="stat-number">15K+</div>
@@ -88,13 +100,17 @@
       </div>
     </div>
     
-    <!-- Scroll Indicator -->
+    <!-- Animated Scroll Indicator -->
     <div class="scroll-indicator">
       <i class="ri-arrow-down-s-line"></i>
     </div>
   </section>
 
-  <!-- Music Store Section -->
+  <!-- ==========================================
+       MUSIC STORE SECTION
+       Product catalog with filtering
+       Products include guitars, keyboards, drums, accessories
+       ========================================== -->
   <section class="store-section" id="store">
     <div class="container">
       <div class="section-header">
@@ -102,6 +118,7 @@
         <p>Premium instruments and accessories for music enthusiasts</p>
       </div>
       
+      <!-- Category Filters -->
       <div class="store-filters">
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="guitars">Guitars</button>
@@ -110,13 +127,18 @@
         <button class="filter-btn" data-filter="accessories">Accessories</button>
       </div>
       
+      <!-- Products Grid - Dynamically populated by JavaScript -->
       <div class="products-grid" id="products-grid">
         <!-- Products will be dynamically inserted here -->
       </div>
     </div>
   </section>
 
-  <!-- Music Library Section -->
+  <!-- ==========================================
+       MUSIC LIBRARY SECTION
+       Song catalog with search, filtering, and view options
+       Features grid/list toggle and category tabs
+       ========================================== -->
   <section class="library-section" id="library">
     <div class="container">
       <div class="section-header">
@@ -124,8 +146,9 @@
         <p>Discover and play from our extensive collection</p>
       </div>
       
-      <!-- Library Controls -->
+      <!-- Library Controls: Search and View Toggle -->
       <div class="library-controls">
+        <!-- Search Bar with Clear Button -->
         <div class="search-container">
           <i class="ri-search-line"></i>
           <input type="text" class="search-input" id="search-input" placeholder="Search songs, artists, albums...">
@@ -135,11 +158,13 @@
         </div>
         
         <div class="action-controls">
+          <!-- Import Local Music (Placeholder) -->
           <input type="file" id="local-folder-input" webkitdirectory directory multiple style="display: none;">
           <button class="btn-primary btn-sm" id="import-music-btn" style="margin-right: 1rem;">
             <i class="ri-folder-music-line"></i> Import Local
           </button>
         
+          <!-- Grid/List View Toggle -->
           <div class="view-controls">
             <button class="view-btn active" data-view="grid" title="Grid View">
               <i class="ri-grid-line"></i>
@@ -151,7 +176,7 @@
         </div>
       </div>
       
-      <!-- Category Tabs -->
+      <!-- Category Filter Tabs -->
       <div class="category-tabs">
         <button class="category-tab active" data-category="all">All</button>
         <button class="category-tab" data-category="popular">Popular</button>
@@ -164,16 +189,18 @@
         </button>
       </div>
       
-      <!-- Songs Grid/List -->
+      <!-- Songs Container - Dynamically populated by JavaScript -->
       <div class="songs-container grid-view" id="songs-container">
         <!-- Songs will be dynamically inserted here -->
       </div>
     </div>
   </section>
 
-
-
-  <!-- About Section -->
+  <!-- ==========================================
+       ABOUT SECTION
+       Bento grid layout showcasing app features
+       Includes Hi-Fi Audio, Visualizer, Store, Offline Mode
+       ========================================== -->
   <section class="about-section" id="about">
     <div class="container">
       <div class="bento-header">
@@ -181,6 +208,7 @@
         <p style="max-width: 600px; margin: 0 auto 3rem; color: var(--text-secondary); font-size: 1.1rem;">Premium music experience meets cutting-edge technology.</p>
       </div>
 
+      <!-- Bento Grid - Various sized feature boxes -->
       <div class="bento-grid">
         <div class="bento-box bento-large main-feat">
            <div class="bento-icon-bg"><i class="ri-disc-line"></i></div>
@@ -196,7 +224,6 @@
             <p>Watch your music come alive with real-time frequency visualization and stunning effects.</p>
         </div>
 
-        <!-- Store Block (Moved up and Made Tall) -->
         <div class="bento-box bento-tall">
              <i class="ri-store-2-line bento-icon-sm"></i>
              <h3>Gear Store</h3>
@@ -218,10 +245,13 @@
     </div>
   </section>
 
-  <!-- Contact Section (Redesigned) -->
+  <!-- ==========================================
+       CONTACT/NEWSLETTER SECTION
+       Email subscription form with gradient effects
+       ========================================== -->
   <section class="contact-section-redesign" id="contact">
     <div class="container">
-      <!-- Hero Newsletter -->
+      <!-- Newsletter Hero -->
       <div class="newsletter-hero">
         <div class="newsletter-glow"></div>
         <h2 class="gradient-text">Stay in the Loop</h2>
@@ -238,7 +268,10 @@
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- ==========================================
+       FOOTER
+       Site links, contact info, and social media
+       ========================================== -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
@@ -293,14 +326,21 @@
     </div>
   </footer>
 
-  <!-- Music Player (Fixed Bottom) -->
+  <!-- ==========================================
+       MUSIC PLAYER (Fixed Bottom Bar)
+       Main player with controls, progress bar, and volume
+       Features: play/pause, prev/next, shuffle, repeat,
+       favorite, download, share, playlist actions
+       ========================================== -->
   <div class="music-player" id="music-player">
+    <!-- Player Left: Album Art, Song Info, Action Buttons -->
     <div class="player-left">
       <img loading="lazy" src="assets/images/MidnightCity.jpg" alt="Album Cover" class="player-cover" id="player-cover">
       <div class="player-info">
         <div class="player-title" id="player-title">Select a song</div>
         <div class="player-artist" id="player-artist">Artist</div>
       </div>
+      <!-- Quick Action Buttons -->
       <button class="btn-icon favorite-btn" id="favorite-btn" title="Like">
         <i class="ri-heart-line"></i>
       </button>
@@ -318,6 +358,7 @@
       </button>
     </div>
     
+    <!-- Player Center: Playback Controls and Progress Bar -->
     <div class="player-center">
       <div class="player-controls">
         <button class="control-btn" id="shuffle-btn" title="Shuffle">
@@ -337,6 +378,7 @@
         </button>
       </div>
       
+      <!-- Progress Bar with Time Display -->
       <div class="progress-bar-container">
         <span class="time-current" id="time-current">0:00</span>
         <div class="progress-bar" id="progress-bar">
@@ -346,6 +388,7 @@
       </div>
     </div>
     
+    <!-- Player Right: Queue, Visualizer, Volume Control -->
     <div class="player-right">
       <button class="btn-icon" id="queue-btn" title="Queue">
         <i class="ri-list-ordered"></i>
@@ -362,7 +405,12 @@
     </div>
   </div>
 
-  <!-- Queue Panel (Slide-in) -->
+  <!-- ==========================================
+       SIDE PANELS
+       Slide-in panels for Queue, Visualizer, and Shopping Cart
+       ========================================== -->
+       
+  <!-- Queue Panel: Shows current song and upcoming tracks -->
   <div class="queue-panel" id="queue-panel">
     <div class="panel-header">
       <h3><i class="ri-list-ordered"></i> Queue</h3>
@@ -385,7 +433,7 @@
     </div>
   </div>
 
-  <!-- Visualizer Panel -->
+  <!-- Visualizer Panel: Real-time audio visualization canvas -->
   <div class="visualizer-panel" id="visualizer-panel">
     <div class="panel-header">
       <h3><i class="ri-equalizer-fill"></i> Audio Visualizer</h3>
@@ -398,7 +446,7 @@
     </div>
   </div>
 
-  <!-- Shopping Cart Panel -->
+  <!-- Shopping Cart Panel: Displays cart items and checkout -->
   <div class="cart-panel" id="cart-panel">
     <div class="panel-header">
       <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
@@ -420,15 +468,24 @@
     </div>
   </div>
 
-  <!-- Notifications Container -->
+  <!-- ==========================================
+       UTILITY OVERLAYS
+       ========================================== -->
+       
+  <!-- Toast Notifications Container -->
   <div class="notifications-container" id="notifications"></div>
 
-  <!-- Loading Overlay -->
+  <!-- Loading Overlay: Shown during initial page load -->
   <div class="loading-overlay" id="loading-overlay">
     <div class="spinner"></div>
   </div>
 
-  <!-- Quick View Modal -->
+  <!-- ==========================================
+       MODALS
+       Quick View, Checkout, and Success screens
+       ========================================== -->
+
+  <!-- Quick View Modal: Product preview with add to cart -->
   <div id="quick-view-modal" class="modal">
     <div class="modal-content glass-panel">
       <span class="close-modal" id="close-quick-view">&times;</span>
@@ -450,7 +507,7 @@
     </div>
   </div>
 
-  <!-- Checkout Modal -->
+  <!-- Checkout Modal: Payment form for cart checkout -->
   <div id="checkout-modal" class="modal">
     <div class="modal-content glass-panel checkout-content">
       <span class="close-modal" id="close-checkout">&times;</span>
@@ -485,7 +542,7 @@
     </div>
   </div>
 
-  <!-- Payment Success Overlay -->
+  <!-- Payment Success Overlay: Shown after successful checkout -->
   <div id="success-overlay" class="overlay">
     <div class="success-content">
       <div class="checkmark-circle">
@@ -498,8 +555,17 @@
     </div>
   </div>
 
-  <!-- Expanded Player Overlay -->
+  <!-- ==========================================
+       EXPANDED PLAYER OVERLAY
+       Full-screen player with circular progress, 
+       album art, controls, settings, and queue sidebar
+       ========================================== -->
   <div class="expanded-player" id="expanded-player">
+    <!-- Dynamic Background Layer -->
+    <div class="album-art-background" id="album-art-bg"></div>
+    <div class="player-overlay"></div>
+
+    <!-- Header with minimize and settings -->
     <div class="expanded-header">
       <button class="icon-btn min-btn" onclick="toggleExpandedPlayer()" title="Minimize">
         <i class="ri-arrow-down-s-line" style="font-size: 2rem;"></i>
@@ -511,6 +577,7 @@
       <button class="icon-btn" id="settings-btn" title="Settings">
         <i class="ri-settings-3-line"></i>
       </button>
+      <!-- Settings Dropdown: Audio quality and playback options -->
       <div class="settings-dropdown" id="settings-dropdown" style="display: none;">
         <div class="settings-item">
           <span>Audio Quality</span>
@@ -539,57 +606,81 @@
       </div>
     </div>
     
+    <!-- Main body with circular player and queue sidebar -->
     <div class="expanded-body">
+      <!-- Left: Circular progress ring with album art and controls -->
       <div class="player-main-section">
         <div class="circle-container">
-          <!-- Prev/Next buttons positioned absolutely -->
+          <!-- Navigation buttons positioned around the circle -->
           <button class="orbit-btn prev" onclick="prevSong()"><i class="ri-skip-back-fill"></i></button>
           <button class="orbit-btn next" onclick="nextSong()"><i class="ri-skip-forward-fill"></i></button>
           
+          <!-- Circular progress SVG and album art -->
           <div class="central-circle">
-            <svg class="progress-ring" width="340" height="340">
-               <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" r="160" cx="170" cy="170"/>
-               <circle class="progress-ring__circle" id="circle-progress" stroke="var(--primary)" stroke-width="6" fill="transparent" r="160" cx="170" cy="170"/>
-               <!-- Handle circle to show current position? Optional -->
+            <!-- Dynamic background moved to main container -->
+
+            
+            <svg class="progress-ring" width="400" height="400">
+               <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="190" cx="200" cy="200"/>
+               <circle class="progress-ring__circle" id="circle-progress" stroke="var(--primary)" stroke-width="8" fill="transparent" r="190" cx="200" cy="200"/>
             </svg>
             <div class="art-container">
                 <img id="expanded-art" src="" alt="Album Art">
+                <div class="art-reflection"></div>
                 <div class="center-play-overlay">
-                    <button class="center-play-btn" onclick="togglePlay()">
+                    <button class="center-play-btn" onclick="togglePlay()" id="expanded-play-btn">
                         <i class="ri-play-fill" id="expanded-play-icon"></i>
                     </button>
                 </div>
             </div>
           </div>
           
+          <!-- Bottom controls: shuffle, waveform progress, repeat -->
           <div class="bottom-controls">
             <button class="orbit-btn shuffle" id="expanded-shuffle-btn" onclick="toggleShuffle()"><i class="ri-shuffle-line"></i></button>
-            <div class="expanded-progress-container">
-              <div class="expanded-progress-bar" id="expanded-progress-bar">
-                <div class="expanded-progress-fill" id="expanded-progress-fill"></div>
+            
+            <!-- Waveform Progress Container -->
+            <div class="waveform-progress-container">
+              <div class="waveform-container" id="waveform-container">
+                <!-- Waveform bars generated by JS -->
               </div>
               <span class="time-display" id="expanded-time">0:00</span>
             </div>
+            
             <button class="orbit-btn repeat" id="expanded-repeat-btn" onclick="toggleRepeat()"><i class="ri-repeat-2-line"></i></button>
           </div>
         </div>
         
+        <!-- Track info with enhanced typography and action buttons -->
         <div class="track-info-large">
              <div class="visualizer-mini" id="mini-viz">
                  <!-- Bars generated by JS -->
              </div>
              <div class="text-info">
-                 <h2 id="expanded-title">Song Title</h2>
-                 <p id="expanded-artist">Artist Name</p>
+                 <h2 id="expanded-title" class="expanded-title-large">Song Title</h2>
+                 <p id="expanded-artist" class="expanded-artist-large">Artist Name</p>
+                 <span id="expanded-album" class="expanded-album-name">Album Name</span>
              </div>
-             <div class="actions">
-                <button class="icon-btn"><i class="ri-heart-line" id="expanded-heart"></i></button>
-                <button class="icon-btn"><i class="ri-share-line"></i></button>
-                <button class="icon-btn"><i class="ri-more-2-fill"></i></button>
+             
+             <!-- Enhanced Action Buttons Row -->
+             <div class="expanded-actions">
+                <button class="action-btn" id="expanded-favorite-btn" title="Favorite">
+                  <i class="ri-heart-line" id="expanded-heart"></i>
+                </button>
+                <button class="action-btn" id="expanded-share-btn-2" title="Share">
+                  <i class="ri-share-line"></i>
+                </button>
+                <button class="action-btn" id="expanded-download-btn" title="Download">
+                  <i class="ri-download-line"></i>
+                </button>
+                <button class="action-btn" id="expanded-add-playlist-btn" title="Add to Playlist">
+                  <i class="ri-play-list-add-line"></i>
+                </button>
              </div>
         </div>
       </div>
       
+      <!-- Right Sidebar: Queue and related songs -->
       <div class="expanded-sidebar-queue">
           <h3>Next up</h3>
           <div class="next-list" id="expanded-queue-list">
@@ -615,10 +706,13 @@
 
 
 
-  <!-- Audio Element -->
+  <!-- ==========================================
+       AUDIO ELEMENT
+       HTML5 audio player with CORS enabled for Web Audio API
+       ========================================== -->
   <audio id="audio-player" preload="metadata" crossorigin="anonymous"></audio>
 
-  <!-- Custom JavaScript -->
+  <!-- Custom JavaScript - Main application logic -->
   <script src="script.js"></script>
 </body>
 </html>

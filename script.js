@@ -310,18 +310,25 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 // Rendering Components
 // ==========================================
+
+/**
+ * Renders the song library with filtering and search applied
+ * Supports grid and list view modes, category filtering, and search
+ * Adds fade-in animations with staggered timing for visual polish
+ */
 function renderSongs() {
   const container = document.getElementById('songs-container');
   container.className = `songs-container ${appState.view}-view`;
   container.innerHTML = '';
 
+  // Apply filters: category and search query
   const filteredSongs = appState.playlist.filter(song => {
-    // Filter by category
+    // Filter by category (all, favorites, popular, new, etc.)
     const categoryMatch = appState.filter === 'all' ||
       (appState.filter === 'favorites' && appState.favorites.includes(song.id)) ||
       song.category.includes(appState.filter);
 
-    // Filter by search
+    // Filter by search query (searches title, artist, album)
     const searchMatch = !appState.searchQuery ||
       song.title.toLowerCase().includes(appState.searchQuery) ||
       song.artist.toLowerCase().includes(appState.searchQuery) ||
@@ -330,17 +337,19 @@ function renderSongs() {
     return categoryMatch && searchMatch;
   });
 
+  // Show empty state if no songs match filters
   if (filteredSongs.length === 0) {
     container.innerHTML = `<div class="empty-state">No songs found matching your criteria.</div>`;
     return;
   }
 
+  // Render each song card
   filteredSongs.forEach((song, index) => {
-    // Determine if this song is currently playing or selected
+    // Determine if this song is currently active (playing)
     const isActive = appState.playlist[appState.currentSongIndex].id === song.id;
     const isFavorite = appState.favorites.includes(song.id);
 
-    // Find absolute index in the main playlist for playing
+    // Find absolute index in the main playlist for playback
     const absoluteIndex = appState.playlist.findIndex(s => s.id === song.id);
 
     const card = document.createElement('div');
@@ -348,7 +357,7 @@ function renderSongs() {
     card.dataset.id = song.id;
     card.dataset.index = absoluteIndex;
 
-    // Staggered Animation
+    // Staggered fade-in animation for smooth entrance
     card.style.opacity = '0';
     card.style.animation = `fadeInUp 0.4s ease forwards ${index * 0.05}s`;
 
@@ -368,6 +377,7 @@ function renderSongs() {
       </div>
     `;
 
+    // Handle song card click to play
     card.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -377,10 +387,17 @@ function renderSongs() {
   });
 }
 
+/**
+ * Renders the product grid in the store section
+ * Supports filtering by product category
+ * 
+ * @param {string} filter - Category filter ('all', 'guitars', 'keyboards', 'drums', 'accessories')
+ */
 function renderProducts(filter = 'all') {
   const container = document.getElementById('products-grid');
   container.innerHTML = '';
 
+  // Filter products by category
   const filteredProducts = filter === 'all'
     ? products
     : products.filter(p => p.category === filter);
@@ -389,7 +406,7 @@ function renderProducts(filter = 'all') {
     const card = document.createElement('div');
     card.className = 'product-card';
 
-    // Staggered Animation
+    // Staggered animation for product cards
     card.style.opacity = '0';
     card.style.animation = `fadeInUp 0.4s ease forwards ${index * 0.05}s`;
 
@@ -419,8 +436,13 @@ function renderProducts(filter = 'all') {
   });
 }
 
-
-
+/**
+ * Generates star rating HTML based on numeric rating
+ * Supports full stars, half stars, and empty stars
+ * 
+ * @param {number} rating - Rating value (0-5)
+ * @returns {string} HTML string with star icons
+ */
 function getStarRating(rating) {
   let stars = '';
   for (let i = 1; i <= 5; i++) {
@@ -440,11 +462,18 @@ function getStarRating(rating) {
 // ==========================================
 const audio = document.getElementById('audio-player');
 
+/**
+ * Loads a song into the player and updates all UI elements
+ * Sets the audio source, updates metadata, favorite status, and media session
+ * 
+ * @param {number} index - Index of the song in the current playlist
+ */
 function loadSong(index) {
   appState.currentSongIndex = index; // Ensure currentSongIndex is updated
   const song = appState.playlist[index];
   if (!song) return;
 
+  // Update player UI with song metadata
   document.getElementById('player-title').textContent = song.title;
   document.getElementById('player-artist').textContent = song.artist;
   document.getElementById('player-cover').src = song.cover;
@@ -455,7 +484,7 @@ function loadSong(index) {
 
   renderSongs(); // Re-render to highlight active song
 
-  // Update favorite button
+  // Update favorite button state
   const favBtn = document.getElementById('favorite-btn');
   const isFavorite = appState.favorites.includes(song.id);
 
@@ -469,13 +498,13 @@ function loadSong(index) {
     }
   }
 
-  // Sync expanded player heart
+  // Sync expanded player heart icon
   const expandedHeart = document.getElementById('expanded-heart');
   if (expandedHeart) {
     expandedHeart.className = isFavorite ? 'ri-heart-fill' : 'ri-heart-line';
   }
 
-  // Setup media session with multiple artwork sizes
+  // Setup media session API for OS-level media controls (lock screen, notifications)
   if ('mediaSession' in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: song.title,
@@ -492,12 +521,26 @@ function loadSong(index) {
 
   renderQueue();
   updateExpandedPlayerUI(); // Update expanded player if open
+
+  // Update enhanced player elements
+  updateAlbumBackground(song.cover);
+  updateExpandedAlbumName();
+  updatePlayingAnimation();
 }
 
+/**
+ * Plays a song with automatic fallback handling
+ * Tries each source in the song's sources array sequentially
+ * If all sources fail, falls back to a universal sample audio file
+ * 
+ * @param {Object} song - Song object containing sources array and metadata
+ * @returns {Promise<void>}
+ */
 async function playWithFallback(song) {
   let played = false;
+  const UNIVERSAL_FALLBACK = 'assets/audio/sample.mp3'; // Universal fallback audio
 
-  // Try each source
+  // Try each source defined in the song object
   for (let i = 0; i < song.sources.length; i++) {
     try {
       console.log(`Trying source ${i + 1}: ${song.sources[i]}`);
@@ -507,38 +550,64 @@ async function playWithFallback(song) {
       appState.isPlaying = true;
       updatePlayButton();
 
-      // Initialize visualizer if needed
+      // Initialize visualizer if needed for audio analysis
       if (!appState.audioContext) {
         initVisualizer();
       }
       break; // Success, exit loop
     } catch (e) {
       console.warn(`Source ${i + 1} failed:`, e);
-      // Continue to next source
+      // Continue to next source in the array
     }
   }
 
+  // If all song sources failed, try the universal fallback
   if (!played) {
-    appState.isPlaying = false;
-    updatePlayButton();
-    showNotification('All sources failed for this song.', 'error');
+    try {
+      console.log(`All sources failed, trying universal fallback: ${UNIVERSAL_FALLBACK}`);
+      audio.src = UNIVERSAL_FALLBACK;
+      await audio.play();
+      played = true;
+      appState.isPlaying = true;
+      updatePlayButton();
 
-    // Auto skip to next song if this one is broken?
-    // Maybe not, might cause infinite loop if all broken.
+      // Notify user that original file is missing
+      showNotification(`Original audio file missing. Playing sample audio for "${song.title}".`, 'warning');
+
+      // Initialize visualizer if needed
+      if (!appState.audioContext) {
+        initVisualizer();
+      }
+    } catch (fallbackError) {
+      console.error('Even universal fallback failed:', fallbackError);
+      appState.isPlaying = false;
+      updatePlayButton();
+      showNotification('Unable to play audio. Please check your audio files.', 'error');
+    }
   }
 }
 
+/**
+ * Plays a song at the specified playlist index
+ * Loads the song and initiates playback with fallback handling
+ * 
+ * @param {number} index - Index of the song in the playlist
+ */
 function playSongAtIndex(index) {
   appState.currentSongIndex = index;
   const song = appState.playlist[index];
 
-  // Update UI immediately (optimistic)
+  // Update UI immediately (optimistic update)
   // loadSong already updates player info and re-renders songs/queue
   loadSong(index);
 
   playWithFallback(song);
 }
 
+/**
+ * Resumes or starts playing the current audio
+ * Handles errors by attempting fallback sources
+ */
 function playAudio() {
   const playPromise = audio.play();
 
@@ -556,12 +625,18 @@ function playAudio() {
   }
 }
 
+/**
+ * Pauses the current audio playback
+ */
 function pauseAudio() {
   audio.pause();
   appState.isPlaying = false;
   updatePlayButton();
 }
 
+/**
+ * Toggles between play and pause states
+ */
 function togglePlay() {
   if (appState.isPlaying) {
     pauseAudio();
@@ -570,6 +645,10 @@ function togglePlay() {
   }
 }
 
+/**
+ * Plays the previous song in the playlist
+ * Wraps around to the last song if at the beginning
+ */
 function prevSong() {
   appState.currentSongIndex--;
   if (appState.currentSongIndex < 0) {
@@ -579,6 +658,10 @@ function prevSong() {
   if (appState.isPlaying) playAudio();
 }
 
+/**
+ * Plays the next song in the playlist
+ * Wraps around to the first song if at the end
+ */
 function nextSong() {
   appState.currentSongIndex++;
   if (appState.currentSongIndex > appState.playlist.length - 1) {
@@ -588,25 +671,31 @@ function nextSong() {
   if (appState.isPlaying) playAudio();
 }
 
+/**
+ * Toggles shuffle mode on/off
+ * Uses Fisher-Yates algorithm to randomize playlist while keeping current song first
+ * When turned off, restores original playlist order
+ */
 function toggleShuffle() {
   appState.isShuffled = !appState.isShuffled;
   const btn = document.getElementById('shuffle-btn');
   const expandedBtn = document.getElementById('expanded-shuffle-btn');
 
   if (appState.isShuffled) {
-    // Fisher-Yates shuffle
+    // Fisher-Yates shuffle algorithm
     const currentSong = appState.playlist[appState.currentSongIndex];
     let shuffled = [...appState.playlist];
 
-    // Remove current song
+    // Remove current song from shuffle pool
     shuffled = shuffled.filter(s => s.id !== currentSong.id);
 
+    // Randomize remaining songs
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
-    // Add current song back at start
+    // Add current song back at start so it keeps playing
     shuffled.unshift(currentSong);
     appState.playlist = shuffled;
     appState.currentSongIndex = 0;
@@ -628,6 +717,12 @@ function toggleShuffle() {
   renderQueue();
 }
 
+/**
+ * Cycles through repeat modes: none -> all -> one -> none
+ * - none: No repeat
+ * - all: Repeat entire playlist
+ * - one: Repeat current song
+ */
 function toggleRepeat() {
   const btn = document.getElementById('repeat-btn');
   const icon = btn.querySelector('i');
@@ -650,6 +745,10 @@ function toggleRepeat() {
   }
 }
 
+/**
+ * Updates play/pause button icons across all player instances
+ * Syncs both main player and expanded player buttons
+ */
 function updatePlayButton() {
   const btns = [document.getElementById('play-btn'), document.getElementById('expanded-play-btn')];
 
@@ -664,24 +763,36 @@ function updatePlayButton() {
   });
 }
 
+/**
+ * Formats seconds into MM:SS format
+ * 
+ * @param {number} seconds - Time in seconds
+ * @returns {string} Formatted time string (e.g., "3:45")
+ */
 function formatTime(seconds) {
   const min = Math.floor(seconds / 60);
   const sec = Math.floor(seconds % 60);
   return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
+/**
+ * Updates all progress indicators during playback
+ * Updates main player bar, expanded player ring, linear bar, and time displays
+ * 
+ * @param {Event} e - Timeupdate event from audio element
+ */
 function updateProgress(e) {
   const { duration, currentTime } = audio;
   const progressPercent = (currentTime / duration) * 100;
 
   if (isNaN(duration)) return;
 
-  // Main Player Progress Bar
+  // Main Player Progress Bar (linear)
   document.getElementById('progress-fill').style.width = `${progressPercent}%`;
   document.getElementById('time-current').textContent = formatTime(currentTime);
   document.getElementById('time-total').textContent = formatTime(duration);
 
-  // Expanded Player Progress Ring
+  // Expanded Player Progress Ring (circular SVG)
   const circle = document.getElementById('circle-progress');
   if (circle) {
     const radius = circle.getAttribute('r');
@@ -701,6 +812,12 @@ function updateProgress(e) {
   if (expTime) expTime.textContent = formatTime(currentTime);
 }
 
+/**
+ * Handles click on progress bar to seek to specific time
+ * Calculates position based on click offset and sets audio currentTime
+ * 
+ * @param {Event} e - Click event
+ */
 function setProgress(e) {
   const width = this.clientWidth;
   const clickX = e.offsetX;
@@ -1758,3 +1875,242 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+/* ==========================================
+ * EXPANDED PLAYER ENHANCEMENTS
+ * Waveform, Action Buttons, Touch Gestures
+ * ========================================== */
+
+/**
+ * Generates waveform bars for the expanded player
+ * Creates 80 bars with random heights to simulate audio waveform
+ */
+function generateWaveform() {
+  const container = document.getElementById('waveform-container');
+  if (!container) return;
+
+  container.innerHTML = ''; // Clear existing
+  const barCount = 80;
+
+  for (let i = 0; i < barCount; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'waveform-bar';
+    const height = 20 + Math.random() * 80;
+    bar.style.height = `${height}%`;
+    bar.dataset.index = i;
+
+    // Click to seek
+    bar.addEventListener('click', () => {
+      const percent = (i / barCount) * 100;
+      seekToPercent(percent);
+    });
+
+    container.appendChild(bar);
+  }
+}
+
+/**
+ * Updates waveform bars to show playback progress
+ * @param {number} percent - Current playback percentage (0-100)
+ */
+function updateWaveformProgress(percent) {
+  const bars = document.querySelectorAll('.waveform-bar');
+  if (bars.length === 0) return;
+
+  const activeIndex = Math.floor((percent / 100) * bars.length);
+
+  bars.forEach((bar, idx) => {
+    bar.classList.remove('active', 'passed');
+    if (idx === activeIndex) {
+      bar.classList.add('active');
+    } else if (idx < activeIndex) {
+      bar.classList.add('passed');
+    }
+  });
+}
+
+/**
+ * Updates blurred album art background dynamically
+ * @param {string} imageUrl - URL of the album art
+ */
+function updateAlbumBackground(imageUrl) {
+  const bgElement = document.getElementById('album-art-bg');
+  if (!bgElement) return;
+
+  bgElement.style.backgroundImage = `url(${imageUrl})`;
+}
+
+/**
+ *  Updates expanded player album name display
+ */
+function updateExpandedAlbumName() {
+  const albumSpan = document.getElementById('expanded-album');
+  if (!albumSpan || !appState.currentSong) return;
+
+  const song = appState.playlist[appState.currentSong];
+  albumSpan.textContent = song.album || 'Single';
+}
+
+/**
+ * Sets up action button event listeners
+ */
+function setupActionButtons() {
+  // Favorite button
+  const favBtn = document.getElementById('expanded-favorite-btn');
+  if (favBtn) {
+    favBtn.addEventListener('click', () => {
+      if (appState.currentSong !== null) {
+        toggleFavorite(appState.currentSong);
+      }
+    });
+  }
+
+  // Share button
+  const shareBtn = document.getElementById('expanded-share-btn-2');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', shareTrack);
+  }
+
+  // Download button
+  const downloadBtn = document.getElementById('expanded-download-btn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', downloadTrack);
+  }
+
+  // Add to playlist button
+  const playlistBtn = document.getElementById('expanded-add-playlist-btn');
+  if (playlistBtn) {
+    playlistBtn.addEventListener('click', () => {
+      // For now, add to favorites (can be expanded later)
+      if (appState.currentSong !== null) {
+        toggleFavorite(appState.currentSong);
+        showNotification('Added to favorites', 'success');
+      }
+    });
+  }
+}
+
+/**
+ * Sets up touch gesture handlers for mobile
+ */
+function setupTouchGestures() {
+  const expandedPlayer = document.getElementById('expanded-player');
+  if (!expandedPlayer) return;
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  const SWIPE_THRESHOLD = 50;
+
+  expandedPlayer.addEventListener('touchstart', (e) => {
+    // Only capture touches on the player background, not on buttons
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'I') return;
+
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  });
+
+  expandedPlayer.addEventListener('touchend', (e) => {
+    if (!touchStartX || !touchStartY) return;
+
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    // Determine direction
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      // Horizontal swipe
+      if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+        if (deltaX > 0) {
+          // Swipe right - previous song
+          prevSong();
+          showSwipeIndicator('left');
+        } else {
+          // Swipe left - next song
+          nextSong();
+          showSwipeIndicator('right');
+        }
+      }
+    } else {
+      // Vertical swipe
+      if (deltaY > SWIPE_THRESHOLD) {
+        // Swipe down - close expanded player
+        const expandedPlayer = document.getElementById('expanded-player');
+        if (expandedPlayer && expandedPlayer.classList.contains('active')) {
+          expandedPlayer.classList.remove('active');
+        }
+      }
+    }
+
+    touchStartX = 0;
+    touchStartY = 0;
+  });
+}
+
+/**
+ * Shows a visual indicator for swipe gestures
+ * @param {string} direction - 'left' or 'right'
+ */
+function showSwipeIndicator(direction) {
+  // Create temporary indicator if it doesn't exist
+  let indicator = document.querySelector(`.swipe-indicator.${direction}`);
+
+  if (!indicator) {
+    indicator = document.createElement('div');
+    indicator.className = `swipe-indicator ${direction}`;
+    indicator.innerHTML = direction === 'left' ? '<i class="ri-skip-back-fill"></i>' : '<i class="ri-skip-forward-fill"></i>';
+    document.body.appendChild(indicator);
+  }
+
+  indicator.classList.add('active');
+  setTimeout(() => {
+    indicator.classList.remove('active');
+  }, 300);
+}
+
+/**
+ * Adds playing class to art container for rotation animation
+ */
+function updatePlayingAnimation() {
+  const artContainer = document.querySelector('.art-container');
+  if (!artContainer) return;
+
+  if (!audio.paused) {
+    artContainer.classList.add('playing');
+  } else {
+    artContainer.classList.remove('playing');
+  }
+}
+
+// Initialize enhanced features when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  // Add small delay to ensure all elements are ready
+  setTimeout(() => {
+    // Generate waveform
+    generateWaveform();
+
+    // Setup action buttons
+    setupActionButtons();
+
+    // Setup touch gestures
+    setupTouchGestures();
+
+    // Setup audio event listeners for waveform
+    const audioElement = document.getElementById('audio-player');
+    if (audioElement) {
+      audioElement.addEventListener('timeupdate', () => {
+        if (audioElement.duration) {
+          const percent = (audioElement.currentTime / audioElement.duration) * 100;
+          updateWaveformProgress(percent);
+        }
+        updatePlayingAnimation();
+      });
+
+      audioElement.addEventListener('play', updatePlayingAnimation);
+      audioElement.addEventListener('pause', updatePlayingAnimation);
+    }
+  }, 500);
+});
+
+
