@@ -787,7 +787,9 @@ function setupPlayerListeners() {
   });
 
   document.getElementById('close-visualizer').addEventListener('click', () => {
-    document.getElementById('visualizer-panel').classList.remove('panel-open');
+    const panel = document.getElementById('visualizer-panel');
+    panel.classList.remove('panel-open');
+    panel.classList.remove('active');
     appState.visualizerActive = false;
   });
 
@@ -798,13 +800,15 @@ function setupPlayerListeners() {
   });
 
   document.getElementById('close-queue').addEventListener('click', () => {
-    document.getElementById('queue-panel').classList.remove('panel-open');
+    const panel = document.getElementById('queue-panel');
+    panel.classList.remove('panel-open');
+    panel.classList.remove('active');
   });
 
   // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     // Only if not typing in an input
-    if (e.target.tagName === 'INPUT') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
     if (e.code === 'Space') {
       e.preventDefault();
@@ -813,6 +817,36 @@ function setupPlayerListeners() {
       prevSong();
     } else if (e.code === 'ArrowRight') {
       nextSong();
+    } else if (e.code === 'ArrowUp') {
+      e.preventDefault();
+      const newVolume = Math.min(1, audio.volume + 0.1);
+      audio.volume = newVolume;
+      appState.volume = newVolume;
+      document.getElementById('volume-slider').value = newVolume * 100;
+      updateVolumeUI();
+    } else if (e.code === 'ArrowDown') {
+      e.preventDefault();
+      const newVolume = Math.max(0, audio.volume - 0.1);
+      audio.volume = newVolume;
+      appState.volume = newVolume;
+      document.getElementById('volume-slider').value = newVolume * 100;
+      updateVolumeUI();
+    } else if (e.code === 'KeyM') {
+      const volumeBtn = document.getElementById('volume-btn');
+      const volumeSlider = document.getElementById('volume-slider');
+      if (audio.volume > 0) {
+        audio.volume = 0;
+        volumeSlider.value = 0;
+        volumeBtn.querySelector('i').className = 'ri-volume-mute-line';
+      } else {
+        audio.volume = appState.volume;
+        volumeSlider.value = appState.volume * 100;
+        updateVolumeUI();
+      }
+    } else if (e.code === 'KeyS') {
+      toggleShuffle();
+    } else if (e.code === 'KeyR') {
+      toggleRepeat();
     }
   });
 
@@ -824,6 +858,94 @@ function setupPlayerListeners() {
   if (expandedPlayBtn) expandedPlayBtn.addEventListener('click', togglePlay);
   if (expandedPrevBtn) expandedPrevBtn.addEventListener('click', prevSong);
   if (expandedNextBtn) expandedNextBtn.addEventListener('click', nextSong);
+
+  // Download Button
+  const downloadBtn = document.getElementById('download-btn');
+  const expandedDownloadBtn = document.getElementById('expanded-download-btn');
+
+  const handleDownload = () => {
+    const song = appState.playlist[appState.currentSongIndex];
+    if (!song) return;
+
+    const link = document.createElement('a');
+    link.href = song.sources[0];
+    link.download = `${song.artist} - ${song.title}.mp3`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showNotification('Download started', 'success');
+  };
+
+  if (downloadBtn) downloadBtn.addEventListener('click', handleDownload);
+  if (expandedDownloadBtn) expandedDownloadBtn.addEventListener('click', handleDownload);
+
+  // Share Button
+  const shareBtn = document.getElementById('share-btn');
+  const expandedShareBtn = document.getElementById('expanded-share-btn');
+
+  const handleShare = async () => {
+    const song = appState.playlist[appState.currentSongIndex];
+    if (!song) return;
+
+    const shareData = {
+      title: song.title,
+      text: `Check out "${song.title}" by ${song.artist} on Neon Beats!`,
+      url: window.location.href
+    };
+
+    // Try Web Share API first
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        showNotification('Shared successfully', 'success');
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.error('Share failed:', err);
+        }
+      }
+    } else {
+      // Fallback: copy to clipboard
+      const text = `${shareData.text}\n${shareData.url}`;
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification('Link copied to clipboard', 'success');
+      }).catch(() => {
+        showNotification('Failed to copy link', 'error');
+      });
+    }
+  };
+
+  if (shareBtn) shareBtn.addEventListener('click', handleShare);
+  if (expandedShareBtn) expandedShareBtn.addEventListener('click', handleShare);
+
+  // Expanded Player Volume Controls
+  const expandedVolumeBtn = document.getElementById('expanded-volume-btn');
+  const expandedVolumeSlider = document.getElementById('volume-slider-expanded');
+
+  if (expandedVolumeSlider) {
+    expandedVolumeSlider.addEventListener('input', (e) => {
+      const value = e.target.value / 100;
+      appState.volume = value;
+      audio.volume = value;
+      document.getElementById('volume-slider').value = e.target.value;
+      updateVolumeUI();
+    });
+  }
+
+  if (expandedVolumeBtn) {
+    expandedVolumeBtn.addEventListener('click', () => {
+      if (audio.volume > 0) {
+        audio.volume = 0;
+        if (expandedVolumeSlider) expandedVolumeSlider.value = 0;
+        document.getElementById('volume-slider').value = 0;
+        expandedVolumeBtn.querySelector('i').className = 'ri-volume-mute-line';
+      } else {
+        audio.volume = appState.volume;
+        if (expandedVolumeSlider) expandedVolumeSlider.value = appState.volume * 100;
+        document.getElementById('volume-slider').value = appState.volume * 100;
+        updateVolumeUI();
+      }
+    });
+  }
 }
 
 function setupEventListeners() {
