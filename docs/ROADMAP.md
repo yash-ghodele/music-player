@@ -227,33 +227,6 @@ This document outlines the future development roadmap for Neon Beats, including 
   - Discord Rich Presence
   - Last.fm scrobbling
 
-### Store Enhancements
-
-#### E-Commerce Features
-- **Payment Integration**
-  - Stripe payment processing
-  - PayPal support
-  - Cryptocurrency payments
-  - Buy now, pay later options
-
-- **Digital Downloads**
-  - Instant MP3/FLAC downloads after purchase
-  - License key system
-  - Automatic updates for purchased content
-
-- **User Reviews & Ratings**
-  - Product review system
-  - Star ratings
-  - Verified purchase badges
-  - Review photos/videos
-
-#### Marketplace
-- **Artist Store**
-  - Artists can sell their music directly
-  - Merch store integration
-  - Concert ticket sales
-  - Meet & greet bookings
-
 ---
 
 ## 🔧 Technical Improvements
@@ -434,7 +407,6 @@ This document outlines the future development roadmap for Neon Beats, including 
 2. Native mobile apps
 3. Desktop application
 4. VR visualizer
-5. Marketplace
 
 ---
 

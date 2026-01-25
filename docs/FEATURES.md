@@ -1,7 +1,7 @@
 # Neon Beats - Complete Features Documentation
 
 ## Overview
-Neon Beats is a feature-rich music player and store with a modern, premium interface. This document provides a comprehensive list of all features and capabilities.
+Neon Beats is a feature-rich music player with a modern, premium interface. This document provides a comprehensive list of all features and capabilities.
 
 ---
 
@@ -103,7 +103,6 @@ Access via gear icon (⚙️) in expanded player header
 All settings and preferences are saved to browser localStorage:
 - Volume level
 - Favorites list
-- Shopping cart
 - Audio quality
 - Crossfade setting
 - Normalize setting
@@ -131,35 +130,7 @@ All settings and preferences are saved to browser localStorage:
 
 ---
 
-## 🛍️ Music Store
 
-### Product Catalog
-- **9 Premium Products**:
-  - 3 Guitars (Fender Stratocaster, Gibson Les Paul, Martin D-28)
-  - 3 Keyboards (Roland Synthesizer, Korg Minilogue, etc.)
-  - 2 Drums (Yamaha Stage Kit)
-  - 1 Accessories (Audio-Technica Headphones, Shure SM7B, Pioneer DJ Controller)
-
-### Product Features
-- **Product Cards**: Image, title, price, rating, category
-- **Quick View Modal**: 
-  - Full product details
-  - Star ratings
-  - Specifications
-  - Mock reviews with user avatars
-  - Audio demo button (simulated)
-- **Category Filtering**: All, Guitars, Keyboards, Drums, Accessories
-- **Hover Effects**: Image zoom, overlay buttons
-
-### Shopping Cart
-- **Add to Cart**: Click cart icon on product cards
-- **Cart Sidebar**: View cart contents from navbar
-- **Remove Items**: Individual item removal
-- **Quantity Display**: Shows total items in badge
-- **Checkout Flow**: Multi-step mock checkout
-- **Cart Persistence**: Saved to localStorage
-
----
 
 ## 🎨 User Interface
 
@@ -174,7 +145,7 @@ All settings and preferences are saved to browser localStorage:
 - **Sticky Navbar**: Fixed navigation with scroll effect
 - **Fixed Bottom Player**: Always-accessible playback controls
 - **Modals**: Quick View, Checkout, Success
-- **Side Panels**: Queue, Visualizer, Cart
+- **Side Panels**: Queue, Visualizer
 - **Loading Overlay**: Initial page load animation (fast)
 
 ### About Section
@@ -183,7 +154,6 @@ All settings and preferences are saved to browser localStorage:
   - Curated Playlists
   - Audio Visualizer
   - Offline Mode
-  - Premium Store
 - **Expandable Descriptions**: Hover for more info
 
 ### Contact Section
@@ -275,8 +245,7 @@ Located in main player left section, next to favorite/download/share:
 - Panel close button fixes
 - Audio visualizer
 - Local music import
-- Shopping cart
-- Product catalog
+- Local music import
 - **Universal audio fallback system** (NEW)
 - **Comprehensive code documentation** (NEW)
 
@@ -295,12 +264,11 @@ Located in main player left section, next to favorite/download/share:
 ## 📊 Statistics
 
 - **Total Songs**: 12 pre-loaded + unlimited local imports
-- **Product Count**: 9 premium music products
 - **Keyboard Shortcuts**: 8 total shortcuts
 - **Settings Options**: 3 (quality, crossfade, normalize)
 - **Playback Modes**: 3 repeat modes + shuffle
 - **View Modes**: 2 (grid/list)
-- **Panels**: 3 (queue, visualizer, cart)
+- **Panels**: 2 (queue, visualizer)
 
 ---
 
@@ -315,7 +283,6 @@ Located in main player left section, next to favorite/download/share:
 ### Data Stored Locally
 - User preferences (volume, quality, etc.)
 - Favorites list (song IDs only)
-- Shopping cart (product IDs and quantities)
 - No personal information collected
 
 ---

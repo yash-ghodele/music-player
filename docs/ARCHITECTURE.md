@@ -7,8 +7,8 @@ Neon Beats is a single-page application (SPA) built with vanilla HTML, CSS, and 
 
 ### 1. `index.html`
 The semantic backbone of the application.
-- **Sections**: Hero, Store (Grid), Library (List), About (Bento Grid), Newsletter.
-- **Modals**: `#quick-view-modal` (Product details), `#checkout-modal` (Cart), `#expanded-player` (Full-screen UI).
+- **Sections**: Hero, Library (List), About (Bento Grid), Newsletter.
+- **Modals**: `#expanded-player` (Full-screen UI).
 - **Core Components**: Navbar, Fixed Bottom Player, Footer.
 
 ### 2. `styles.css`
@@ -25,7 +25,6 @@ Handles the application state and logic.
 A centralized state object tracks:
 - `playlist`: Array of current songs.
 - `currentSongIndex`: Integer pointer.
-- `cart`: Array of items in the shopping cart.
 - `favorites`: Array of favored song IDs.
 - `audioContext`: Web Audio API context for the visualizer.
 
@@ -39,7 +38,6 @@ A centralized state object tracks:
 ## Data Persistence
 The app uses the browser's `localStorage` to save:
 - **`neon_favorites`**: IDs of liked songs
-- **`neon_cart`**: Current shopping cart contents
 - **`neon_volume`**: Last used volume level
 - **`audioQuality`**: Selected audio quality (high/medium/low)
 - **`crossfade`**: Crossfade enabled/disabled state

@@ -34,12 +34,6 @@ You can play your own MP3s directly in the app:
 4. The app will parse them and add a **"Local Music"** tab
    - *Tip: Place a `cover.jpg` in the folder to set the album art*
 
-## Gear Store
-The store is a simulation of a premium instrument shop.
-1. **Browse**: Scroll through guitars, keyboards, and drums in the Store section
-2. **Quick View**: Click the **Eye icon** to see specs and ratings
-3. **Add to Cart**: Click the **Cart icon**
-4. **Checkout**: Open the sidebar cart and click "Checkout". This runs a payment simulation (no real money is charged)
 
 ## Keyboard Shortcuts
 
@@ -59,5 +53,5 @@ The store is a simulation of a premium instrument shop.
 ## Troubleshooting
 - **No Sound?**: Ensure your system volume is up and the web page is not muted
 - **Visualizer not moving?**: The browser might block audio context. Click anywhere on the page to resume audio context
-- **Products not showing?**: Make sure you're using the server (not opening file:// directly)
+
 - **Settings not persisting?**: Check that your browser allows localStorage

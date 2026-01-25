@@ -2,7 +2,7 @@
 
 A beautiful, modern music player built with vanilla HTML, CSS, and JavaScript. Features a stunning dark theme with glassmorphism effects and audio visualization.
 
-![Neon Beats](assets/images/MidnightCity.jpg)
+![Neon Beats](assets/images/logo.png)
 
 ## ✨ Features
 
@@ -77,7 +77,6 @@ Music Player/
 2. Select audio files from your computer
 3. Songs will be added to your library
 4. **Tip:** Add image files (cover.jpg) in the same folder for thumbnails
-
 
 ### Keyboard Shortcuts
 
