@@ -35,7 +35,6 @@
       <!-- Main Navigation Links -->
       <ul class="nav-menu" id="nav-menu">
         <li><a href="#home" class="nav-link active">Home</a></li>
-        <li><a href="#store" class="nav-link">Store</a></li>
         <li><a href="#library" class="nav-link">Library</a></li>
         <li><a href="#playlists" class="nav-link">Playlists</a></li>
         <li><a href="#about" class="nav-link">About</a></li>
@@ -43,10 +42,6 @@
       
       <!-- Navigation Actions: Cart and Login -->
       <div class="nav-actions">
-        <button class="btn-icon cart-btn" id="cart-btn" title="Shopping Cart">
-          <i class="ri-shopping-cart-2-line"></i>
-          <span class="cart-badge" id="cart-badge">0</span>
-        </button>
         <button class="btn-primary" id="login-btn">Sign In</button>
         <button class="nav-toggle" id="nav-toggle">
           <i class="ri-menu-line"></i>
@@ -76,10 +71,6 @@
         <a href="#library" class="btn-large btn-primary">
           <i class="ri-play-circle-line"></i>
           Explore Library
-        </a>
-        <a href="#store" class="btn-large btn-secondary">
-          <i class="ri-shopping-bag-line"></i>
-          Shop Now
         </a>
       </div>
       
@@ -111,28 +102,6 @@
        Product catalog with filtering
        Products include guitars, keyboards, drums, accessories
        ========================================== -->
-  <section class="store-section" id="store">
-    <div class="container">
-      <div class="section-header">
-        <h2>Featured Products</h2>
-        <p>Premium instruments and accessories for music enthusiasts</p>
-      </div>
-      
-      <!-- Category Filters -->
-      <div class="store-filters">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="guitars">Guitars</button>
-        <button class="filter-btn" data-filter="keyboards">Keyboards</button>
-        <button class="filter-btn" data-filter="drums">Drums</button>
-        <button class="filter-btn" data-filter="accessories">Accessories</button>
-      </div>
-      
-      <!-- Products Grid - Dynamically populated by JavaScript -->
-      <div class="products-grid" id="products-grid">
-        <!-- Products will be dynamically inserted here -->
-      </div>
-    </div>
-  </section>
 
   <!-- ==========================================
        MUSIC LIBRARY SECTION
@@ -224,11 +193,6 @@
             <p>Watch your music come alive with real-time frequency visualization and stunning effects.</p>
         </div>
 
-        <div class="bento-box bento-tall">
-             <i class="ri-store-2-line bento-icon-sm"></i>
-             <h3>Gear Store</h3>
-             <p class="text-sm">Curated collection of premium guitars, keyboards, drums, and audio accessories for musicians.</p>
-        </div>
 
         <div class="bento-box bento-wide">
             <div class="bento-content-row">
@@ -293,7 +257,6 @@
         <div class="footer-section">
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="#store">Store</a></li>
           <li><a href="#library">Library</a></li>
           <li><a href="#about">About</a></li>
           </ul>
@@ -447,26 +410,6 @@
   </div>
 
   <!-- Shopping Cart Panel: Displays cart items and checkout -->
-  <div class="cart-panel" id="cart-panel">
-    <div class="panel-header">
-      <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-      <button class="btn-icon" id="close-cart">
-        <i class="ri-close-line"></i>
-      </button>
-    </div>
-    <div class="panel-content" id="cart-items">
-      <!-- Cart items will be inserted here -->
-    </div>
-    <div class="panel-footer">
-      <div class="cart-total">
-        <span>Total:</span>
-        <span id="cart-total">$0.00</span>
-      </div>
-      <button class="btn-primary btn-block" id="checkout-btn">
-        <i class="ri-secure-payment-line"></i> Checkout
-      </button>
-    </div>
-  </div>
 
   <!-- ==========================================
        UTILITY OVERLAYS
@@ -486,61 +429,8 @@
        ========================================== -->
 
   <!-- Quick View Modal: Product preview with add to cart -->
-  <div id="quick-view-modal" class="modal">
-    <div class="modal-content glass-panel">
-      <span class="close-modal" id="close-quick-view">&times;</span>
-      <div class="quick-view-grid">
-        <div class="quick-view-image">
-          <img id="qv-image" src="" alt="Product">
-        </div>
-        <div class="quick-view-info">
-          <div class="qv-category" id="qv-category">Guitar</div>
-          <h2 id="qv-title">Fender Stratocaster</h2>
-          <div class="qv-rating" id="qv-rating">
-            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-          </div>
-          <p class="qv-description">Experience premium sound quality with this professional-grade instrument. Built for performance and durability.</p>
-          <div class="qv-price" id="qv-price">$1,499.99</div>
-          <button class="btn-primary" id="qv-add-btn">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Checkout Modal: Payment form for cart checkout -->
-  <div id="checkout-modal" class="modal">
-    <div class="modal-content glass-panel checkout-content">
-      <span class="close-modal" id="close-checkout">&times;</span>
-      <h2>Checkout</h2>
-      <div class="checkout-summary">
-        <div class="summary-row">
-          <span>Total items:</span>
-          <span id="checkout-count">0</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total:</span>
-          <span id="checkout-total">$0.00</span>
-        </div>
-      </div>
-      <form id="checkout-form" onsubmit="event.preventDefault(); window.processPayment();">
-        <div class="form-group">
-          <label>Card Number</label>
-          <input type="text" placeholder="**** **** **** ****" required>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Expiry</label>
-            <input type="text" placeholder="MM/YY" required>
-          </div>
-          <div class="form-group">
-            <label>CVC</label>
-            <input type="text" placeholder="123" required>
-          </div>
-        </div>
-        <button type="submit" class="btn-primary btn-block">Pay Now</button>
-      </form>
-    </div>
-  </div>
 
   <!-- Payment Success Overlay: Shown after successful checkout -->
   <div id="success-overlay" class="overlay">
@@ -551,7 +441,7 @@
       </div>
       <h2>Payment Successful!</h2>
       <p>Your order runs on music. 🎵</p>
-      <button class="btn-primary" onclick="window.closeSuccess()">Continue Shopping</button>
+      <button class="btn-primary" onclick="window.closeSuccess()">Continue Listening</button>
     </div>
   </div>
 
@@ -687,6 +577,6 @@
 
   <!-- Custom JavaScript - Main application logic -->
   <script src="script.js"></script>
-  <script src="queue-sidebar.js"></script>
+
 </body>
 </html>

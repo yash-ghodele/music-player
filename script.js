@@ -16,7 +16,7 @@ const appState = {
   originalPlaylist: [], // For un-shuffle
   queue: [],
   favorites: [],
-  cart: [],
+  favorites: [],
   view: 'grid', // 'grid' or 'list'
   filter: 'all',
   searchQuery: '',
@@ -163,89 +163,7 @@ const songs = [
   }
 ];
 
-const products = [
-  {
-    id: 'p1',
-    title: "Fender Stratocaster - Neon Edition",
-    price: 1499.99,
-    category: "guitars",
-    image: "assets/images/fender_strat.jpg",
-    rating: 4.9,
-    description: "The classic Strat sound with a futuristic neon finish. Maple neck, alder body, and custom shop pickups."
-  },
-  {
-    id: 'p2',
-    title: "Roland Synthesis Keyboard",
-    price: 899.99,
-    category: "keyboards",
-    image: "assets/images/roland_synth.jpg",
-    rating: 4.8,
-    description: "A powerhouse synthesizer with over 2000 sounds and intuitive controls for live performance."
-  },
-  {
-    id: 'p3',
-    title: "Yamaha Stage Drum Kit",
-    price: 1299.99,
-    category: "drums",
-    image: "assets/images/yamaha_drums.jpg",
-    rating: 4.7,
-    description: "Professional birch shells for recording and touring. Includes hardware and cymbals."
-  },
-  {
-    id: 'p4',
-    title: "Audio-Technica Master Headphones",
-    price: 199.99,
-    category: "accessories",
-    image: "assets/images/audiotechnica.jpg",
-    rating: 4.9,
-    description: "Reference quality open-back headphones for mixing and mastering."
-  },
-  {
-    id: 'p5',
-    title: "Gibson Les Paul Standard",
-    price: 2499.99,
-    category: "guitars",
-    image: "assets/images/gibson_lespaul.jpg",
-    rating: 5.0,
-    description: "The iconic rock machine. Mahogany body with maple top for sustain and bite."
-  },
-  {
-    id: 'p6',
-    title: "Shure SM7B Vocal Mic",
-    price: 399.99,
-    category: "accessories",
-    image: "assets/images/shure_sm7b.jpg",
-    rating: 4.8,
-    description: "The podcast and vocal standard. smooth, flat, wide-range frequency response."
-  },
-  {
-    id: 'p7',
-    title: "Korg Minilogue Poly-Synth",
-    price: 549.99,
-    category: "keyboards",
-    image: "assets/images/korg_minilogue.jpg",
-    rating: 4.6,
-    description: "Next-gen analog synthesizer with 4-voice polyphony and built-in delay."
-  },
-  {
-    id: 'p8',
-    title: "Martin D-28 Acoustic",
-    price: 2999.99,
-    category: "guitars",
-    image: "assets/images/martin_d28.jpg",
-    rating: 5.0,
-    description: "The dreadnought by which all others are judged. Sitka spruce top and rosewood back."
-  },
-  {
-    id: 'p9',
-    title: "Pioneer DJ Controller",
-    price: 800.00,
-    category: "accessories",
-    image: "assets/images/pioneer_dj.jpg",
-    rating: 4.7,
-    description: "4-channel performance DJ controller for rekordbox dj."
-  }
-];
+
 
 
 
@@ -253,58 +171,64 @@ const products = [
 // Initialization
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  // Load saved state from localStorage
   try {
-    // Theme removed
-
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      appState.cart = JSON.parse(savedCart);
-    }
-
-    const savedFavorites = localStorage.getItem('favorites');
-    if (savedFavorites) {
-      appState.favorites = JSON.parse(savedFavorites);
-    }
-  } catch (e) {
-    console.warn('Failed to load saved state:', e);
-  }
-
-  // Initialize state
-  appState.playlist = [...songs];
-  appState.originalPlaylist = [...songs];
-
-  // Initialize UI
-  renderSongs();
-  renderProducts(); // Render products on load
-  updateCartUI();
-  updateVolumeUI();
-
-  // Load initial song
-  loadSong(appState.currentSongIndex);
-
-  // Setup Listeners
-  setupPlayerListeners();
-  setupEventListeners();
-
-  // Remove loading overlay (fast!)
-  setTimeout(() => {
+    // Load saved state from localStorage
     try {
-      const overlay = document.getElementById('loading-overlay');
-      if (overlay) {
-        overlay.style.opacity = '0';
-        overlay.style.transition = 'opacity 0.3s';
-        setTimeout(() => {
-          overlay.style.display = 'none';
-          overlay.style.visibility = 'hidden';
-        }, 300);
-      } else {
-        console.warn('Loading overlay element not found');
+      // Theme removed
+
+
+      const savedFavorites = localStorage.getItem('favorites');
+      if (savedFavorites) {
+        appState.favorites = JSON.parse(savedFavorites);
       }
     } catch (e) {
-      console.error('Error hiding loading overlay:', e);
+      console.warn('Failed to load saved state:', e);
     }
-  }, 100); // Reduced from 1000ms to 100ms for instant loading
+
+    // Initialize state
+    appState.playlist = [...songs];
+    appState.originalPlaylist = [...songs];
+
+    // Initialize UI
+    renderSongs();
+    updateVolumeUI();
+
+    // Load initial song
+    loadSong(appState.currentSongIndex);
+
+    // Setup Listeners
+    setupPlayerListeners();
+    setupEventListeners();
+  } catch (err) {
+    console.error('Critical initialization error:', err);
+    // Show notification to user
+    setTimeout(() => {
+      if (typeof showNotification === 'function') {
+        showNotification('Error starting app: ' + err.message, 'error');
+      } else {
+        alert('Error starting app: ' + err.message);
+      }
+    }, 1000);
+  } finally {
+    // Remove loading overlay (fast!) - ALWAYS run this
+    setTimeout(() => {
+      try {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+          overlay.style.opacity = '0';
+          overlay.style.transition = 'opacity 0.3s';
+          setTimeout(() => {
+            overlay.style.display = 'none';
+            overlay.style.visibility = 'hidden';
+          }, 300);
+        } else {
+          console.warn('Loading overlay element not found');
+        }
+      } catch (e) {
+        console.error('Error hiding loading overlay:', e);
+      }
+    }, 100); // Reduced from 1000ms to 100ms for instant loading
+  }
 });
 
 // ==========================================
@@ -387,75 +311,7 @@ function renderSongs() {
   });
 }
 
-/**
- * Renders the product grid in the store section
- * Supports filtering by product category
- * 
- * @param {string} filter - Category filter ('all', 'guitars', 'keyboards', 'drums', 'accessories')
- */
-function renderProducts(filter = 'all') {
-  const container = document.getElementById('products-grid');
-  container.innerHTML = '';
 
-  // Filter products by category
-  const filteredProducts = filter === 'all'
-    ? products
-    : products.filter(p => p.category === filter);
-
-  filteredProducts.forEach((product, index) => {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-
-    // Staggered animation for product cards
-    card.style.opacity = '0';
-    card.style.animation = `fadeInUp 0.4s ease forwards ${index * 0.05}s`;
-
-    card.innerHTML = `
-      <div class="product-image">
-        <img loading="lazy" src="${product.image}" alt="${product.title}" loading="lazy">
-        <div class="product-overlay">
-          <button type="button" class="btn-icon" onclick="addToCart('${product.id}')" title="Add to Cart">
-            <i class="ri-shopping-cart-2-line"></i>
-          </button>
-          <button type="button" class="btn-icon" onclick="openQuickView('${product.id}')" title="Quick View">
-            <i class="ri-eye-line"></i>
-          </button>
-        </div>
-      </div>
-      <div class="product-info">
-        <span class="product-category">${product.category}</span>
-        <h3 class="product-title">${product.title}</h3>
-        <div class="product-rating">
-          ${getStarRating(product.rating)}
-        </div>
-        <div class="product-price">$${product.price}</div>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-/**
- * Generates star rating HTML based on numeric rating
- * Supports full stars, half stars, and empty stars
- * 
- * @param {number} rating - Rating value (0-5)
- * @returns {string} HTML string with star icons
- */
-function getStarRating(rating) {
-  let stars = '';
-  for (let i = 1; i <= 5; i++) {
-    if (i <= rating) {
-      stars += '<i class="ri-star-fill" style="color: #fca311; font-size: 0.8rem"></i>';
-    } else if (i - 0.5 <= rating) {
-      stars += '<i class="ri-star-half-fill" style="color: #fca311; font-size: 0.8rem"></i>';
-    } else {
-      stars += '<i class="ri-star-line" style="color: #666; font-size: 0.8rem"></i>';
-    }
-  }
-  return stars;
-}
 
 // ==========================================
 // Music Player Logic
@@ -477,6 +333,9 @@ function loadSong(index) {
   document.getElementById('player-title').textContent = song.title;
   document.getElementById('player-artist').textContent = song.artist;
   document.getElementById('player-cover').src = song.cover;
+
+  // Update Next Up Queue
+  setTimeout(() => updateNextUpQueue(), 100);
 
   // Set first source by default for metadata
   // If it's 404, it might error, but we'll catch it on play
@@ -1216,19 +1075,7 @@ function setupEventListeners() {
     fileInput.addEventListener('change', handleLocalFiles);
   }
 
-  // Store Filters
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-      const filter = this.dataset.filter;
 
-      // Update UI
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-
-      // Filter products
-      renderProducts(filter);
-    });
-  });
 
   // View Toggle (Grid/List)
   document.querySelectorAll('.view-btn').forEach(btn => {
@@ -1240,16 +1087,7 @@ function setupEventListeners() {
     });
   });
 
-  // Cart Toggle
-  const cartBtn = document.getElementById('cart-btn');
-  if (cartBtn) cartBtn.addEventListener('click', toggleCart);
 
-  const closeCartBtn = document.getElementById('close-cart');
-  if (closeCartBtn) closeCartBtn.addEventListener('click', toggleCart);
-
-  // Checkout Button
-  const checkoutBtn = document.getElementById('checkout-btn');
-  if (checkoutBtn) checkoutBtn.addEventListener('click', openCheckout);
 
   // Clear Queue Button
   const clearQueueBtn = document.getElementById('clear-queue');
@@ -1392,71 +1230,7 @@ function renderQueue() {
   }
 }
 
-// ==========================================
-// Shopping Cart
-// ==========================================
-function addToCart(productId) {
-  const product = products.find(p => p.id === productId);
-  if (!product) return;
 
-  const existingItem = appState.cart.find(item => item.id === productId);
-
-  if (existingItem) {
-    existingItem.quantity++;
-    showNotification('Quantity updated!', 'info');
-  } else {
-    appState.cart.push({ ...product, quantity: 1 });
-    showNotification(`${product.title} added to cart!`, 'success');
-  }
-
-  updateCartUI();
-  saveStateToStorage();
-}
-
-function removeFromCart(id) {
-  appState.cart = appState.cart.filter(item => item.id !== id);
-  updateCartUI();
-  saveStateToStorage();
-}
-
-function updateCartUI() {
-  const container = document.querySelector('.cart-items');
-  if (!container) return;
-  container.innerHTML = '';
-
-  let total = 0;
-  let count = 0;
-
-  appState.cart.forEach(item => {
-    total += item.price * item.quantity;
-    count += item.quantity;
-
-    const cartItem = document.createElement('div');
-    cartItem.className = 'cart-item';
-    cartItem.innerHTML = `
-      <img loading="lazy" src="${item.image}" alt="${item.title}">
-      <div class="cart-item-info">
-        <h4>${item.title}</h4>
-        <div class="cart-item-price">$${item.price.toLocaleString()} x ${item.quantity}</div>
-      </div>
-      <button class="remove-btn" onclick="removeFromCart('${item.id}')">
-        <i class="ri-close-line"></i>
-      </button>
-    `;
-    container.appendChild(cartItem);
-  });
-
-  // Update Total
-  const totalEl = document.getElementById('cart-total-display');
-  if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
-
-  // Update Badge
-  const badges = document.querySelectorAll('.cart-count');
-  badges.forEach(badge => {
-    badge.textContent = count;
-    badge.style.display = count > 0 ? 'flex' : 'none';
-  });
-}
 
 // ==========================================
 // Notifications & Utils
@@ -1481,15 +1255,13 @@ function showNotification(message, type = 'info') {
 
 function saveStateToStorage() {
   localStorage.setItem('neonBeats_favorites', JSON.stringify(appState.favorites));
-  localStorage.setItem('neonBeats_cart', JSON.stringify(appState.cart));
+  localStorage.setItem('neonBeats_favorites', JSON.stringify(appState.favorites));
 }
 
 function loadStateForStorage() {
   const favorites = localStorage.getItem('neonBeats_favorites');
   if (favorites) appState.favorites = JSON.parse(favorites);
 
-  const cart = localStorage.getItem('neonBeats_cart');
-  if (cart) appState.cart = JSON.parse(cart);
 }
 
 // ==========================================
@@ -2114,3 +1886,39 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+// ==========================================
+// Queue Sidebar Functionality
+// ==========================================
+function updateNextUpQueue() {
+  const container = document.getElementById('next-up-list');
+  if (!container) return;
+
+  const currentIndex = appState.currentSongIndex;
+  // Get next 5 songs
+  const nextSongs = appState.playlist.slice(currentIndex + 1, currentIndex + 6);
+
+  if (nextSongs.length === 0) {
+    container.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 2rem 0;">No more songs in queue</p>';
+    return;
+  }
+
+  container.innerHTML = nextSongs.map(song => `
+    <div class="queue-item" onclick="playSongById('${song.id}')" data-song-id="${song.id}">
+      <img src="${song.cover}" alt="${song.title}">
+      <div class="queue-item-info">
+        <div class="queue-item-title">${song.title}</div>
+        <div class="queue-item-artist">${song.artist}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function playSongById(songId) {
+  const songIndex = appState.playlist.findIndex(s => s.id === songId);
+  if (songIndex !== -1) {
+    appState.currentSongIndex = songIndex;
+    loadSong(songIndex);
+    playAudio();
+  }
+}

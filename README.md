@@ -1,6 +1,6 @@
 # 🎵 Neon Beats - Premium Music Store & Player
 
-A beautiful, modern music player and store built with vanilla HTML, CSS, and JavaScript. Features a stunning dark theme with glassmorphism effects, audio visualization, and a complete shopping experience.
+A beautiful, modern music player built with vanilla HTML, CSS, and JavaScript. Features a stunning dark theme with glassmorphism effects and audio visualization.
 
 ![Neon Beats](assets/images/MidnightCity.jpg)
 
@@ -16,8 +16,6 @@ A beautiful, modern music player and store built with vanilla HTML, CSS, and Jav
 - 🔍 **Search & Filter** - Find songs by title, artist, or album
 - 📁 **Local Music Import** - Add your own music files with thumbnail support
 - 🎧 **Audio Visualizer** - Real-time frequency visualization
-- 🛍️ **Music Store** - Browse and purchase music gear
-- 🛒 **Shopping Cart** - Complete checkout experience
 - 💾 **Offline Ready** - Works mostly offline after first load
 - 🌙 **Dark Theme** - Beautiful glassmorphism design
 
@@ -56,7 +54,7 @@ Music Player/
 │   ├── ARCHITECTURE.md # Technical architecture
 │   └── FEATURES.md     # Detailed feature list
 └── assets/
-    ├── images/         # Album covers and product images
+    ├── images/         # Album covers
     └── audio/          # Music files
 ```
 
@@ -80,11 +78,6 @@ Music Player/
 3. Songs will be added to your library
 4. **Tip:** Add image files (cover.jpg) in the same folder for thumbnails
 
-### Shopping in the Store
-1. Navigate to **Store** section
-2. **Click Product Cards** to view details
-3. **Add to Cart** using the cart button
-4. **Checkout** when ready to purchase
 
 ### Keyboard Shortcuts
 
@@ -152,7 +145,6 @@ Currently using demo audio (data URLs). To add real music:
 
 ### Local Storage
 - Remembers your favorites
-- Saves shopping cart
 - Persists volume settings
 
 ## 🐛 Troubleshooting
