@@ -381,6 +381,14 @@ function playSongAtIndex(index) {
 }
 
 /**
+ * Plays a song by its ID. Used in queue clicks.
+ */
+function playSongById(id) {
+  const index = appState.playlist.findIndex(s => s.id === id);
+  if (index !== -1) playSongAtIndex(index);
+}
+
+/**
  * Advances to the next song. Handles repeat modes and end of playlist.
  */
 function nextSong() {
@@ -652,6 +660,36 @@ function renderQueue() {
       </div>
     `;
   }
+}
+
+// ==========================================
+// 8. AUDIO VISUALIZER ENGINE
+// ==========================================
+
+/**
+ * Updates the 'Up Next' queue list in the Expanded Player sidebar
+ */
+function updateNextUpQueue() {
+  const container = document.getElementById('ep-queue-list');
+  if (!container) return; // Element might not exist in some layouts
+
+  // Get next 5 songs
+  const nextSongs = appState.playlist.slice(appState.currentSongIndex + 1, appState.currentSongIndex + 6);
+
+  if (nextSongs.length === 0) {
+    container.innerHTML = '<p style="color:#666; font-size:0.9rem;">End of playlist</p>';
+    return;
+  }
+
+  container.innerHTML = nextSongs.map((song, i) => `
+    <div class="queue-item" onclick="playSongAtIndex(${appState.currentSongIndex + 1 + i})">
+      <img src="${song.cover}" alt="${song.title}">
+      <div class="queue-info">
+        <h5>${song.title}</h5>
+        <p>${song.artist}</p>
+      </div>
+    </div>
+  `).join('');
 }
 
 // ==========================================
