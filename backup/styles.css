@@ -1,0 +1,942 @@
+/* 
+  ====================================================================
+  NEON BEATS - MAIN STYLESHEET
+  ====================================================================
+  1. Variables & Configuration
+  2. Reset & Base Styles
+  3. Typography & Utility Classes
+  4. Components (Buttons, Nav, Forms)
+  5. Section Styles (Hero, Library, About)
+  6. Floating Music Player (Bottom Bar)
+  7. Side Panels (Queue, Visualizer)
+  8. Fullscreen Expanded Player
+  9. Animations & Media Queries
+*/
+
+/* ==========================================
+   1. VARIABLES & CONFIGURATION
+   ========================================== */
+:root {
+  /* Color Palette - Neon Cyberpunk Theme */
+  --primary: #f72585;   /* Hot Pink */
+  --secondary: #7209b7; /* Deep Purple */
+  --accent: #4cc9f0;    /* Cyan */
+  
+  /* Background Colors */
+  --dark: #120118;      /* Main background */
+  --darker: #0a000e;    /* Footer/Darker areas */
+  --surface: #1f0529;   /* Cards/Panels */
+  --surface-hover: #2d0b3b;
+  
+  /* Text Colors */
+  --text: #ffffff;
+  --text-secondary: #b3b3b3;
+  
+  /* Status Colors */
+  --success: #4cc9f0;
+  --error: #f72585;
+  --warning: #fca311;
+  --info: #480ca8;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+  --gradient-dark: linear-gradient(135deg, #1f0529 0%, #120118 100%);
+  --gradient-glass: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  
+  /* Dimensions & Spacing */
+  --header-height: 80px;
+  --player-height: 90px;
+  --border-radius-sm: 8px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 24px;
+  --border-radius-full: 9999px;
+  
+  /* Effects */
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 8px 15px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.4);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --backdrop-blur: blur(12px);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* ==========================================
+   2. RESET & BASE STYLES
+   ========================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary) var(--darker);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--dark);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  padding-bottom: 120px; /* Space for floating player */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition);
+}
+
+ul { list-style: none; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--darker); }
+::-webkit-scrollbar-thumb { 
+  background: var(--secondary); 
+  border-radius: 4px; 
+}
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ==========================================
+   3. TYPOGRAPHY & UTILITY CLASSES
+   ========================================== */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+h1 { font-size: 3.5rem; }
+h2 { font-size: 2.5rem; }
+h3 { font-size: 1.8rem; }
+
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ==========================================
+   4. COMPONENTS
+   ========================================== */
+
+/* Buttons */
+.btn-primary, .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 2rem;
+  border-radius: var(--border-radius-full);
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 4px 15px rgba(114, 9, 183, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(247, 37, 133, 0.5);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: rgba(247, 37, 133, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  background: transparent;
+  width: 40px; 
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.btn-icon:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.btn-icon.active {
+  color: var(--primary);
+}
+
+/* Navigation Bar */
+.navbar {
+  height: var(--header-height);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(18, 1, 24, 0.8);
+  backdrop-filter: var(--backdrop-blur);
+  border-bottom: var(--glass-border);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.nav-link.active, .nav-link:hover {
+  color: white;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-toggle { display: none; font-size: 1.5rem; background: none; color: white; }
+
+/* ==========================================
+   5. SECTION STYLES
+   ========================================== */
+section { padding: 6rem 0; }
+.section-header { text-align: center; margin-bottom: 4rem; }
+.section-header h2 { font-size: 3rem; margin-bottom: 1rem; }
+
+/* Hero Section */
+.hero {
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--header-height);
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 1, 24, 0.7), rgba(18, 1, 24, 0.9)),
+              url('assets/images/bg.jpg') center/cover;
+  z-index: -1;
+  animation: bgZoom 20s infinite alternate;
+}
+@keyframes bgZoom { to { transform: scale(1.1); } }
+
+.hero-content {
+  text-align: center;
+  max-width: 900px;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  padding: 2rem;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius-md);
+  margin-top: 4rem;
+  border: var(--glass-border);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -10px); } }
+
+/* Library Section */
+.library-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: var(--surface);
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius-full);
+  border: var(--glass-border);
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  max-width: 600px;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  width: 100%;
+  color: white;
+  font-size: 1rem;
+}
+
+.category-tabs {
+  display: flex;
+  gap: 0.8rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.category-tab {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.05);
+  color: var(--text-secondary);
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.category-tab.active, .category-tab:hover {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: transparent;
+}
+
+/* Songs Grid */
+.songs-container.grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.song-card {
+  background: var(--surface);
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+  transition: var(--transition);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.song-card:hover {
+  background: var(--surface-hover);
+  transform: translateY(-5px);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.song-image-container {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.song-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.song-card:hover .song-image { transform: scale(1.1); }
+
+/* About Bento Grid */
+.about-section { background: var(--darker); }
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 240px);
+  gap: 1.5rem;
+}
+
+.bento-box {
+  background: var(--surface);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  border: var(--glass-border);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bento-large { grid-column: span 2; }
+.bento-tall { grid-column: span 1; grid-row: span 2; }
+.bento-wide { grid-column: span 2; }
+
+/* Newsletter Form */
+.newsletter-hero {
+  text-align: center;
+  background: var(--gradient-dark);
+  padding: 4rem;
+  border-radius: var(--border-radius-lg);
+  border: var(--glass-border);
+}
+.input-group-hero {
+  display: flex;
+  max-width: 500px;
+  margin: 2rem auto;
+  background: rgba(255,255,255,0.1);
+  padding: 0.5rem;
+  border-radius: 50px;
+}
+.input-group-hero input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 0 1rem;
+}
+
+/* Footer */
+.footer {
+  background: var(--darker);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 5rem 0 2rem;
+}
+.footer-content {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 4rem;
+}
+
+/* ==========================================
+   6. FLOATING MUSIC PLAYER
+   ========================================== */
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 1200px;
+  height: 90px;
+  background: rgba(18, 5, 24, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 2rem;
+  z-index: 2000;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  transition: all 0.3s;
+}
+
+.music-player:hover {
+  background: rgba(18, 5, 24, 0.95);
+  border-color: rgba(255,255,255,0.2);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* Player Left */
+.player-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player-cover {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-title { color: white; font-weight: 600; font-size: 1rem; }
+.player-artist { color: var(--text-secondary); font-size: 0.8rem; }
+
+/* Player Center (Controls) */
+.player-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.control-btn {
+  background: transparent;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.control-btn:hover { color: white; background: rgba(255,255,255,0.1); }
+
+.play-btn {
+  width: 48px;
+  height: 48px;
+  background: white;
+  color: black;
+  font-size: 1.8rem;
+  box-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+
+.play-btn:hover {
+  background: var(--primary);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(247, 37, 133, 0.5);
+}
+
+.progress-bar-container {
+  width: 400px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* Player Right (Volume) */
+.player-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  width: 120px;
+  gap: 0.5rem;
+}
+
+.volume-slider {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  -webkit-appearance: none;
+}
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+
+/* ==========================================
+   7. SIDE PANELS & MODALS
+   ========================================== */
+.queue-panel, .visualizer-panel {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 350px;
+  height: 100vh;
+  background: rgba(18, 5, 24, 0.95);
+  backdrop-filter: blur(20px);
+  z-index: 2500;
+  transition: right 0.4s ease;
+  border-left: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.queue-panel.active, .visualizer-panel.active { right: 0; }
+
+.panel-header { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+.panel-content { flex: 1; overflow-y: auto; padding: 1.5rem; }
+
+/* Queue Items */
+.queue-item {
+  display: flex;
+  gap: 1rem;
+  padding: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.queue-item:hover { background: rgba(255,255,255,0.05); }
+.queue-item img { width: 48px; height: 48px; border-radius: 6px; }
+
+/* Notifications */
+.notifications-container {
+  position: fixed;
+  bottom: 140px;
+  right: 20px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: var(--surface);
+  border-left: 4px solid var(--primary);
+  padding: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  animation: slideIn 0.3s forwards;
+  color: white;
+}
+@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+/* =========================================
+   8. NEW EXPANDED PLAYER STYLES
+   ========================================= */
+.expanded-player-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 20, 0.98);
+    backdrop-filter: blur(20px);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.expanded-player-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.ep-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.ep-close-btn {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.ep-close-btn:hover {
+    opacity: 1;
+}
+
+.ep-art {
+    width: 300px;
+    height: 300px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    margin-bottom: 2rem;
+    object-fit: cover;
+    animation: pulseArt 2s infinite alternate;
+}
+
+@keyframes pulseArt { from { transform: scale(1); } to { transform: scale(1.02); } }
+
+.ep-info {
+    margin-bottom: 3rem;
+}
+
+.ep-info h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.ep-info p {
+    font-size: 1.2rem;
+    color: #aaa;
+}
+
+.ep-controls {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.ep-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: transform 0.2s;
+}
+
+.ep-btn:hover {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.ep-play {
+    width: 80px;
+    height: 80px;
+    background: white;
+    color: black;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.ep-settings-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.ep-settings-btn:hover {
+    opacity: 1;
+}
+
+.settings-dropdown {
+    position: absolute;
+    top: 5rem;
+    right: 2rem;
+    background: rgba(20, 20, 30, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    min-width: 200px;
+    display: none;
+    z-index: 10000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: left;
+}
+
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 0.9rem;
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.ep-play:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255,255,255,0.4);
+}
+
+.ep-container {
+    display: flex;
+    gap: 4rem;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 1000px;
+}
+
+.ep-sidebar {
+    width: 320px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+    height: 480px;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: var(--backdrop-blur);
+}
+
+.ep-sidebar h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.5rem;
+}
+
+.ep-queue-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* Custom Scrollbar for ep-queue-list */
+.ep-queue-list::-webkit-scrollbar {
+    width: 4px;
+}
+.ep-queue-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+.ep-queue-list::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* =========================================
+   9. MEDIA QUERIES
+   ========================================= */
+@media (max-width: 900px) {
+  .hero-title { font-size: 3rem; }
+  .music-player { 
+    height: auto; 
+    padding: 1rem;
+    grid-template-columns: 1fr auto; 
+    bottom: 20px;
+  }
+  .player-info, .volume-control { display: none; }
+  .progress-bar-container { width: 100%; min-width: auto; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .bento-large, .bento-tall, .bento-wide { grid-column: span 1; grid-row: auto; }
+  
+  .ep-container {
+    flex-direction: column;
+    gap: 2rem;
+    overflow-y: auto;
+    height: 85vh;
+    padding-top: 4rem;
+    width: 100%;
+  }
+  .ep-sidebar {
+    width: 90%;
+    height: auto;
+    max-height: 250px;
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-stats { flex-direction: column; gap: 1rem; }
+  .music-player { bottom: 0; width: 100%; border-radius: 0; }
+  .ep-art { width: 250px; height: 250px; }
+  .ep-sidebar {
+    display: none;
+  }
+}

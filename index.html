@@ -1,54 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- 
-    ==========================================
-    HEAD SECTION
-    Contains meta tags for SEO, external resources, 
-    CSS links, and tab title.
-    ========================================== 
-  -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Neon Beats - Premium Music Store & Player with Advanced Features">
-  <meta name="keywords" content="music, player, store, streaming, audio">
+  <meta name="description" content="Neon Beats - Premium Music Store & Player with Spotify-style Sidebar">
+  <meta name="keywords" content="music, player, store, streaming, audio, cyber, neon">
   <title>Neon Beats - Premium Music Store & Player</title>
   
   <!-- Icon Library: RemixIcon (CDN) -->
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="assets/fonts/remixicon.css" rel="stylesheet">
   
-  <!-- Main Stylesheet (v2.9 for cache busting) -->
-  <link rel="stylesheet" href="styles.css?v=2.9">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=3.0">
   
   <!-- Website Favicon -->
   <link rel="icon" type="image/png" href="assets/images/logo.png">
 </head>
 <body>
   
-  <!-- 
-    ==========================================
-    NAVIGATION BAR
-    Fixed top bar containing the logo, navigation links, 
-    and login/menu buttons.
-    ========================================== 
-  -->
+  <!-- BACKGROUND GRADIENT BLUR OVERLAYS -->
+  <div class="bg-glow bg-glow-1" id="album-art-bg"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <!-- NAVIGATION BAR -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <!-- Brand Logo & Name -->
       <div class="nav-logo">
         <img loading="lazy" src="assets/images/logo.png" alt="Neon Beats Logo" style="width: 32px; height: 32px; margin-right: 0.5rem;">
         <span class="gradient-text">Neon Beats</span>
       </div>
       
-      <!-- Desktop Navigation Menu -->
       <ul class="nav-menu" id="nav-menu">
         <li><a href="#home" class="nav-link active">Home</a></li>
         <li><a href="#library" class="nav-link">Library</a></li>
-        <li><a href="#playlists" class="nav-link">Playlists</a></li>
         <li><a href="#about" class="nav-link">About</a></li>
       </ul>
       
-      <!-- Nav Actions (Login & Mobile Toggle) -->
       <div class="nav-actions">
         <button class="btn-primary" id="login-btn">Sign In</button>
         <button class="nav-toggle" id="nav-toggle">
@@ -58,13 +45,7 @@
     </div>
   </nav>
 
-  <!-- 
-    ==========================================
-    HERO SECTION
-    The main landing area with a large background, 
-    headline, call-to-action button, and stats.
-    ========================================== 
-  -->
+  <!-- HERO SECTION -->
   <section class="hero" id="home">
     <div class="hero-background"></div>
     <div class="hero-content">
@@ -73,11 +54,10 @@
         Live the Sound.
       </h1>
       <p class="hero-description">
-        Experience music like never before with our premium collection of tracks and instruments.
-        Discover, play, and own the beats that move you.
+        Experience music like never before with our premium collection of tracks.
+        Discover and play the beats that move you.
       </p>
       
-      <!-- Primary CTA Button -->
       <div class="hero-buttons">
         <a href="#library" class="btn-large btn-primary">
           <i class="ri-play-circle-line"></i>
@@ -85,7 +65,6 @@
         </a>
       </div>
       
-      <!-- Key Statistics -->
       <div class="hero-stats">
         <div class="stat-item">
           <div class="stat-number">15K+</div>
@@ -102,19 +81,12 @@
       </div>
     </div>
     
-    <!-- Animated Scroll Hint -->
     <div class="scroll-indicator">
       <i class="ri-arrow-down-s-line"></i>
     </div>
   </section>
 
-  <!-- 
-    ==========================================
-    LIBRARY SECTION
-    The core music browser. Features a search bar, 
-    category filters (All, Popular, etc.), and the grid/list of songs.
-    ========================================== 
-  -->
+  <!-- LIBRARY SECTION -->
   <section class="library-section" id="library">
     <div class="container">
       <div class="section-header">
@@ -122,9 +94,8 @@
         <p>Discover and play from our extensive collection</p>
       </div>
       
-      <!-- Search & View Controls -->
+      <!-- Search & Controls -->
       <div class="library-controls">
-        <!-- Search Input -->
         <div class="search-container">
           <i class="ri-search-line"></i>
           <input type="text" class="search-input" id="search-input" placeholder="Search songs, artists, albums...">
@@ -133,15 +104,12 @@
           </button>
         </div>
         
-        <!-- Right-side Actions -->
         <div class="action-controls">
-          <!-- Local File Import (Hidden Input) -->
           <input type="file" id="local-folder-input" webkitdirectory directory multiple style="display: none;">
           <button class="btn-primary btn-sm" id="import-music-btn" style="margin-right: 1rem;">
             <i class="ri-folder-music-line"></i> Import Local
           </button>
         
-          <!-- Grid/List View Toggle Buttons -->
           <div class="view-controls">
             <button class="view-btn active" data-view="grid" title="Grid View">
               <i class="ri-grid-line"></i>
@@ -153,105 +121,81 @@
         </div>
       </div>
       
-      <!-- Filter Tabs -->
-      <div class="category-tabs">
-        <button class="category-tab active" data-category="all">All</button>
-        <button class="category-tab" data-category="popular">Popular</button>
-        <button class="category-tab" data-category="new">New Releases</button>
-        <button class="category-tab" data-category="rock">Rock</button>
-        <button class="category-tab" data-category="pop">Pop</button>
-        <button class="category-tab" data-category="electronic">Electronic</button>
-        <button class="category-tab" data-category="favorites">
-          <i class="ri-heart-fill"></i> Favorites
-        </button>
-      </div>
-      
-      <!-- Song Cards Container (Populated via JS) -->
+      <!-- Song Cards Container -->
       <div class="songs-container grid-view" id="songs-container"></div>
     </div>
   </section>
 
-  <!-- 
-    ==========================================
-    ABOUT SECTION
-    A bento-grid style section highlighting key features:
-    Hi-Fi Audio, Visualizer, and Offline Mode.
-    ========================================== 
-  -->
+  <!-- ABOUT SECTION -->
   <section class="about-section" id="about">
     <div class="container">
-      <div class="bento-header">
-        <h2>Why Neon Beats?</h2>
-        <p style="max-width: 600px; margin: 0 auto 3rem; color: var(--text-secondary); font-size: 1.1rem;">Premium music experience meets cutting-edge technology.</p>
+      <div class="about-header">
+        <span class="about-badge"><i class="ri-sparkling-line"></i> Why Choose Us</span>
+        <h2>Why <span class="gradient-text">Neon Beats</span>?</h2>
+        <p class="about-subtitle">Premium music experience meets cutting-edge technology.</p>
       </div>
 
-      <div class="bento-grid">
-        <!-- Feature 1: Hi-Fi Audio -->
-        <div class="bento-box bento-large main-feat">
-           <div class="bento-icon-bg"><i class="ri-disc-line"></i></div>
-           <h3>Hi-Fi Audio</h3>
-           <p>Stream in lossless quality with our custom audio engine. Every note, every beat, exactly as the artist intended.</p>
-        </div>
-
-        <!-- Feature 2: Visualizer (with animation) -->
-        <div class="bento-box bento-tall bg-gradient">
-            <h3>Audio Visualizer</h3>
-            <div class="mini-viz-bars">
-                <span></span><span></span><span></span><span></span><span></span>
-            </div>
-            <p>Watch your music come alive with real-time frequency visualization and stunning effects.</p>
-        </div>
-
-        <!-- Feature 3: Offline Mode -->
-        <div class="bento-box bento-wide">
-            <div class="bento-content-row">
-                <div class="icon-circle"><i class="ri-wifi-off-line"></i></div>
-                <div>
-                   <h3>Offline Mode</h3>
-                   <p>Download your favorite tracks and enjoy your entire library without an internet connection.</p>
-                </div>
-            </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 
-    ==========================================
-    NEWSLETTER SECTION
-    Simple email subscription form.
-    ========================================== 
-  -->
-  <section class="contact-section-redesign" id="contact">
-    <div class="container">
-      <div class="newsletter-hero">
-        <div class="newsletter-glow"></div>
-        <h2 class="gradient-text">Stay in the Loop</h2>
-        <p>Get exclusive music drops, special offers, and insider access delivered to your inbox.</p>
-        <form class="newsletter-form-hero" id="newsletter-form">
-          <div class="input-group-hero">
-            <i class="ri-mail-line"></i>
-            <input type="email" placeholder="Enter your email" required id="newsletter-email">
-            <button type="submit" class="btn-primary">Subscribe</button>
+      <div class="features-grid">
+        <!-- Hero Feature Card -->
+        <div class="feature-card feature-hero">
+          <div class="feature-card-glow"></div>
+          <div class="feature-icon-wrap">
+            <i class="ri-headphone-line"></i>
           </div>
-        </form>
-        <p class="newsletter-note">🔒 We respect your privacy. Unsubscribe anytime.</p>
+          <h3>Hi-Fi Audio Engine</h3>
+          <p>Stream in crystal-clear lossless quality with our custom audio engine. Every note, every beat, exactly as the artist intended.</p>
+          <div class="feature-waveform">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <!-- Feature 2: Live Visualizer -->
+        <div class="feature-card">
+          <div class="feature-icon-wrap accent-icon">
+            <i class="ri-equalizer-line"></i>
+          </div>
+          <h3>Live Visualizer</h3>
+          <p>Watch your music come alive with stunning animated spectrum that reacts to playback in real-time.</p>
+        </div>
+
+        <!-- Feature 3: Offline Ready -->
+        <div class="feature-card">
+          <div class="feature-icon-wrap pink-icon">
+            <i class="ri-wifi-off-line"></i>
+          </div>
+          <h3>Offline Ready</h3>
+          <p>Import local tracks and enjoy your entire music library without any internet connection required.</p>
+        </div>
+
+        <!-- Feature 4: Smart Sidebar -->
+        <div class="feature-card">
+          <div class="feature-icon-wrap purple-icon">
+            <i class="ri-layout-right-line"></i>
+          </div>
+          <h3>Smart Sidebar</h3>
+          <p>Unified panel combining Now Playing, Queue management, and Visualizer in one sleek interface.</p>
+        </div>
+
+        <!-- Feature 5: Multi-Format -->
+        <div class="feature-card">
+          <div class="feature-icon-wrap green-icon">
+            <i class="ri-folder-music-line"></i>
+          </div>
+          <h3>Multi-Format</h3>
+          <p>Supports MP3, WAV, OGG, FLAC, M4A, and AAC — drag, drop, and play your entire collection.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 
-    ==========================================
-    FOOTER
-    Site map, contact info, copyright, and social links.
-    ========================================== 
-  -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
         <div class="footer-section">
           <h3><i class="ri-music-2-line"></i> Neon Beats</h3>
-          <p>Your ultimate destination for music streaming and premium instruments.</p>
+          <p>Your ultimate destination for music streaming and local player playback.</p>
           <div class="social-links">
             <a href="#" title="Facebook"><i class="ri-facebook-fill"></i></a>
             <a href="#" title="Twitter"><i class="ri-twitter-fill"></i></a>
@@ -264,8 +208,8 @@
         <div class="footer-section">
           <h4>Quick Links</h4>
           <ul>
-          <li><a href="#library">Library</a></li>
-          <li><a href="#about">About</a></li>
+            <li><a href="#library">Library</a></li>
+            <li><a href="#about">About</a></li>
           </ul>
         </div>
         
@@ -276,7 +220,6 @@
             <li><a href="#">Contact Us</a></li>
             <li><a href="#">Privacy Policy</a></li>
             <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Refund Policy</a></li>
           </ul>
         </div>
         
@@ -296,29 +239,120 @@
     </div>
   </footer>
 
-  <!-- 
-    ==========================================
-    MINI MUSIC PLAYER (BOTTOM BAR)
-    Fixed player overlay showing current song info,
-    playback controls (Play/Pause/Skip), and volume toggle.
-    ========================================== 
-  -->
+  <!-- CODESPACE SIDEBAR (UNIFIED RIGHT SIDE PANEL) -->
+  <div class="right-sidebar" id="right-sidebar">
+    <!-- Header with Tabs and Close -->
+    <div class="sidebar-header">
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab active" data-tab="now-playing">Player</button>
+        <button class="sidebar-tab" data-tab="queue">Queue</button>
+        <button class="sidebar-tab" data-tab="visualizer">Visualizer</button>
+      </div>
+      <button class="btn-icon" id="close-sidebar-btn" title="Close Panel">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+
+    <!-- Sidebar Contents -->
+    <div class="sidebar-content">
+      
+      <!-- TAB 1: NOW PLAYING VIEW -->
+      <div class="tab-panel active" id="tab-now-playing">
+        <div class="sp-player-view">
+          <div class="sp-art-container">
+            <img id="sp-art" src="assets/images/logo.png" alt="Album Cover" class="sp-art">
+          </div>
+          
+          <div class="sp-track-details">
+            <div class="sp-info">
+              <h3 id="sp-title">Select a song</h3>
+              <p id="sp-artist">Artist Name</p>
+            </div>
+            
+            <div class="sp-settings-container">
+              <button class="btn-icon" id="sp-settings-btn" title="Audio Settings">
+                <i class="ri-settings-3-line"></i>
+              </button>
+              
+              <div class="sp-settings-dropdown" id="sp-settings-dropdown">
+                <div class="settings-item">
+                  <span>Audio Quality</span>
+                  <select id="settings-quality">
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+                <div class="settings-item">
+                  <span>Crossfade</span>
+                  <input type="checkbox" id="settings-crossfade">
+                </div>
+                <div class="settings-item">
+                  <span>Normalize Volume</span>
+                  <input type="checkbox" id="settings-normalize">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sp-next-up-container">
+            <h4>Next Up</h4>
+            <div class="sp-next-up-list" id="sp-next-up-list">
+              <!-- Populated dynamically via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: QUEUE VIEW -->
+      <div class="tab-panel" id="tab-queue">
+        <div class="sp-queue-view">
+          <div class="queue-now-playing">
+            <h4>Now Playing</h4>
+            <div id="sp-queue-current">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+          <div class="queue-next-section">
+            <div class="queue-next-header">
+              <h4>Play Queue</h4>
+              <button class="btn-secondary btn-xs" id="sp-clear-queue-btn">Clear Queue</button>
+            </div>
+            <div class="sp-queue-list" id="sp-queue-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: VISUALIZER VIEW -->
+      <div class="tab-panel" id="tab-visualizer">
+        <div class="sp-visualizer-view">
+          <h4>Audio Visualizer</h4>
+          <p class="viz-desc">Simulated cyberpunk spectrum reacting to playback</p>
+          <div class="css-visualizer-container" id="sp-css-visualizer">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FLOATING MINI MUSIC PLAYER (BOTTOM BAR) -->
   <div class="music-player" id="music-player">
-    <!-- Left: Song Info & Secondary Actions -->
-    <div class="player-left">
-      <img loading="lazy" src="assets/images/MidnightCity.jpg" alt="Album Cover" class="player-cover" id="player-cover">
+    <!-- Left: Song Info -->
+    <div class="player-left" id="player-left-clickable" style="cursor: pointer;" title="Toggle Now Playing view">
+      <img loading="lazy" src="assets/images/logo.png" alt="Album Cover" class="player-cover" id="player-cover">
       <div class="player-info">
         <div class="player-title" id="player-title">Select a song</div>
         <div class="player-artist" id="player-artist">Artist</div>
       </div>
-      <button class="btn-icon favorite-btn" id="favorite-btn" title="Like"><i class="ri-heart-line"></i></button>
-      <button class="btn-icon" id="download-btn" title="Download"><i class="ri-download-line"></i></button>
-      <button class="btn-icon" id="share-btn" title="Share"><i class="ri-share-line"></i></button>
-      <button class="btn-icon" id="add-to-playlist-btn" title="Add to Playlist"><i class="ri-play-list-add-line"></i></button>
-      <button class="btn-icon" id="queue-next-btn" title="Queue Next"><i class="ri-list-ordered"></i></button>
     </div>
     
-    <!-- Center: Main Controls & Progress Bar -->
+    <!-- Center: Playback Controls & Seek Bar -->
     <div class="player-center">
       <div class="player-controls">
         <button class="control-btn" id="shuffle-btn" title="Shuffle"><i class="ri-shuffle-line"></i></button>
@@ -337,104 +371,16 @@
       </div>
     </div>
     
-    <!-- Right: Volume & Features -->
+    <!-- Right: Sidebar Toggle & Volume Control -->
     <div class="player-right">
-      <button class="btn-icon" id="queue-btn" title="Queue"><i class="ri-list-ordered"></i></button>
-      <button class="btn-icon" id="visualizer-btn" title="Visualizer"><i class="ri-equalizer-fill"></i></button>
+      <button class="btn-icon" id="sidebar-toggle-btn" title="Toggle Sidebar">
+        <i class="ri-side-bar-line"></i>
+      </button>
       <div class="volume-control">
         <button class="btn-icon" id="volume-btn" title="Mute"><i class="ri-volume-up-line"></i></button>
         <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="70">
       </div>
     </div>
-  </div>
-
-  <!-- 
-    ==========================================
-    SLIDE-OUT PANELS (Queue & Visualizer)
-    ========================================== 
-  -->
-  
-  <!-- Queue Sidebar -->
-  <div class="queue-panel" id="queue-panel">
-    <div class="panel-header">
-      <h3><i class="ri-list-ordered"></i> Queue</h3>
-      <button class="btn-icon" id="close-queue"><i class="ri-close-line"></i></button>
-    </div>
-    <div class="panel-content">
-      <div class="queue-now-playing">
-        <h4>Now Playing</h4>
-        <div id="queue-current"></div>
-      </div>
-      <div class="queue-next">
-        <h4>Up Next</h4>
-        <div id="queue-list"></div>
-      </div>
-    </div>
-    <div class="panel-footer">
-      <button class="btn-secondary" id="clear-queue">Clear Queue</button>
-    </div>
-  </div>
-
-  <!-- Visualizer Overlay -->
-  <div class="visualizer-panel" id="visualizer-panel">
-    <div class="panel-header">
-      <h3><i class="ri-equalizer-fill"></i> Audio Visualizer</h3>
-      <button class="btn-icon" id="close-visualizer"><i class="ri-close-line"></i></button>
-    </div>
-    <div class="panel-content">
-      <canvas id="visualizer-canvas"></canvas>
-    </div>
-  </div>
-
-  <!-- 
-    ==========================================
-    EXPANDED PLAYER OVERLAY (Full Screen)
-    Simplified full-screen view with large art and controls.
-    ========================================== 
-  -->
-  <div class="expanded-player-overlay" id="expanded-player-overlay">
-      <div class="ep-content">
-          <!-- Close Button -->
-          <button class="ep-close-btn" onclick="toggleExpandedPlayer()">
-              <i class="ri-arrow-down-s-line"></i>
-          </button>
-          
-          <!-- Settings Button -->
-          <button class="ep-settings-btn" id="settings-btn">
-              <i class="ri-settings-3-line"></i>
-          </button>
-          
-          <!-- Settings Dropdown -->
-          <div class="settings-dropdown" id="settings-dropdown">
-              <div class="settings-item">
-                  <span>Audio Quality</span>
-                  <select>
-                      <option>High</option>
-                      <option>Medium</option>
-                  </select>
-              </div>
-              <div class="settings-item">
-                  <span>Crossfade</span>
-                  <input type="checkbox">
-              </div>
-          </div>
-          
-          <!-- Large Album Art -->
-          <img id="ep-art" src="" alt="Album Art" class="ep-art">
-          
-          <!-- Track Info -->
-          <div class="ep-info">
-              <h2 id="ep-title">Song Title</h2>
-              <p id="ep-artist">Artist Name</p>
-          </div>
-          
-          <!-- Large Controls -->
-          <div class="ep-controls">
-              <button onclick="prevSong()" class="ep-btn"><i class="ri-skip-back-fill"></i></button>
-              <button onclick="togglePlay()" class="ep-btn ep-play"><i class="ri-play-fill" id="ep-play-icon"></i></button>
-              <button onclick="nextSong()" class="ep-btn"><i class="ri-skip-forward-fill"></i></button>
-          </div>
-      </div>
   </div>
 
   <!-- Notification Toasts Container -->
@@ -445,16 +391,11 @@
     <div class="spinner"></div>
   </div>
 
-  <!-- 
-    ==========================================
-    AUDIO ENGINE
-    Hidden HTML5 Audio element driving playback.
-    ========================================== 
-  -->
+  <!-- Hidden HTML5 Audio Element -->
   <audio id="audio-player" preload="metadata" crossorigin="anonymous"></audio>
 
   <!-- Main Application Script -->
-  <script src="script.js?v=2.9"></script>
+  <script src="script.js?v=3.0"></script>
 
 </body>
 </html>

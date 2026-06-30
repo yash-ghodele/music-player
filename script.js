@@ -1,43 +1,30 @@
 /**
  * ====================================================================
- * NEON BEATS - MAIN APPLICATION SCRIPT
+ * NEON BEATS - MAIN APPLICATION SCRIPT (v3.0 REBUILD)
  * ====================================================================
- * This script handles the core functionality of the music player,
- * including state management, audio playback, UI rendering,
- * and event handling.
  */
 
 // ==========================================
 // 1. APPLICATION STATE
 // ==========================================
-// Central store for the app's dynamic data.
-// - playlist: The array of songs currently available to play
-// - currentSongIndex: Index of the currently playing song
-// - isPlaying: Boolean status of playback
-// - volume: Current volume level (0.0 to 1.0)
-// - favorites: Array of song IDs marked as favorite
 const appState = {
   currentSongIndex: 0,
   isPlaying: false,
   isShuffled: false,
-  repeatMode: 'none', // Options: 'none', 'one', 'all'
+  repeatMode: 'none', // 'none', 'all', 'one'
   volume: 0.7,
-  playlist: [],       // Current playlist (can be shuffled)
-  originalPlaylist: [], // Backup of original order for un-shuffle
-  queue: [],
-  favorites: [],
-  view: 'grid',       // 'grid' or 'list' display mode
-  filter: 'all',      // Current category filter
-  searchQuery: '',    // Current search term
-  audioContext: null, // Web Audio API context
-  analyser: null,     // Audio analyser node for visualizer
-  visualizerActive: false
+  playlist: [],
+  originalPlaylist: [],
+  searchQuery: '',
+  view: 'grid', // 'grid' or 'list'
+  sidebarOpen: false,
+  sidebarTab: 'now-playing', // 'now-playing', 'queue', 'visualizer'
+  savedVolume: 0.7
 };
 
 // ==========================================
-// 2. SONG DATA
+// 2. SONG CATALOG
 // ==========================================
-// Hardcoded catalog of songs. In a details app, this would come from an API.
 const songs = [
   {
     id: 's1',
@@ -45,10 +32,8 @@ const songs = [
     artist: "M83",
     album: "Hurry Up, We're Dreaming",
     cover: "assets/images/MidnightCity.jpg",
-    sources: ['assets/audio/sample.mp3'], // Placeholder audio
-    duration: "4:03",
-    category: ["popular", "electronic", "favorites"],
-    price: 1.29
+    sources: ['assets/audio/sample.mp3'],
+    duration: "4:03"
   },
   {
     id: 's2',
@@ -57,9 +42,7 @@ const songs = [
     album: "After Hours",
     cover: "assets/images/BlindingLights.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "3:20",
-    category: ["popular", "pop"],
-    price: 1.29
+    duration: "3:20"
   },
   {
     id: 's3',
@@ -68,9 +51,7 @@ const songs = [
     album: "Future Nostalgia",
     cover: "assets/images/MidnightCity.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "3:45",
-    category: ["popular", "pop"],
-    price: 1.29
+    duration: "3:45"
   },
   {
     id: 's4',
@@ -79,9 +60,7 @@ const songs = [
     album: "After Hours",
     cover: "assets/images/SaveYourTears.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "3:35",
-    category: ["popular", "pop"],
-    price: 1.29
+    duration: "3:35"
   },
   {
     id: 's5',
@@ -90,9 +69,7 @@ const songs = [
     album: "F*CK LOVE 3: OVER YOU",
     cover: "assets/images/HeatWaves.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "2:21",
-    category: ["new", "pop"],
-    price: 1.29
+    duration: "2:21"
   },
   {
     id: 's6',
@@ -101,9 +78,7 @@ const songs = [
     album: "Gemini Rights",
     cover: "assets/images/BlindingLights.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "3:52",
-    category: ["popular", "rock"],
-    price: 1.29
+    duration: "3:52"
   },
   {
     id: 's7',
@@ -112,9 +87,7 @@ const songs = [
     album: "Dreamland",
     cover: "assets/images/HeatWaves.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "3:58",
-    category: ["popular", "electronic"],
-    price: 1.29
+    duration: "3:58"
   },
   {
     id: 's8',
@@ -123,9 +96,7 @@ const songs = [
     album: "Harry's House",
     cover: "assets/images/SaveYourTears.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "2:47",
-    category: ["new", "pop"],
-    price: 1.29
+    duration: "2:47"
   },
   {
     id: 's9',
@@ -134,9 +105,7 @@ const songs = [
     album: "Hounds of Love",
     cover: "assets/images/MidnightCity.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "4:58",
-    category: ["popular", "rock"],
-    price: 0.99
+    duration: "4:58"
   },
   {
     id: 's10',
@@ -145,9 +114,7 @@ const songs = [
     album: "SMITHEREENS",
     cover: "assets/images/BlindingLights.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "3:53",
-    category: ["new", "pop"],
-    price: 1.29
+    duration: "3:53"
   },
   {
     id: 's11',
@@ -156,9 +123,7 @@ const songs = [
     album: "RENAISSANCE",
     cover: "assets/images/HeatWaves.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "4:38",
-    category: ["new", "pop"],
-    price: 1.29
+    duration: "4:38"
   },
   {
     id: 's12',
@@ -167,115 +132,93 @@ const songs = [
     album: "Special",
     cover: "assets/images/SaveYourTears.jpg",
     sources: ['assets/audio/sample.mp3'],
-    duration: "3:11",
-    category: ["new", "pop"],
-    price: 1.29
+    duration: "3:11"
   }
 ];
 
+const audio = document.getElementById('audio-player');
+
 // ==========================================
-// 3. INITIALIZATION
+// 3. INITIALIZATION & LAUNCH
 // ==========================================
-// Main entry point when the DOM is ready.
-// Sets up state, renders initial UI, and attaches listeners.
 document.addEventListener('DOMContentLoaded', () => {
   try {
-    // Attempt to load saved favorites from localStorage for persistence
-    try {
-      const savedFavorites = localStorage.getItem('favorites');
-      if (savedFavorites) {
-        appState.favorites = JSON.parse(savedFavorites);
-      }
-    } catch (e) {
-      console.warn('Failed to load saved state:', e);
-    }
+    // Load local storage preferences
+    loadSettings();
 
-    // Initialize playlist state with song data
+    // Populate catalog
     appState.playlist = [...songs];
     appState.originalPlaylist = [...songs];
 
-    // Initial Render of UI components
+    // Initial render
     renderSongs();
     updateVolumeUI();
 
-    // Prepare audio player with first song (does not auto-play)
+    // Load first track (unplayed)
     loadSong(appState.currentSongIndex);
 
-    // Attach all event handlers
-    setupPlayerListeners();
-    setupAdvancedListeners(); // Initializing advanced features
+    // Bind all user controls
+    setupListeners();
+
+    // Navbar scroll detection
+    setupScrollSpy();
+
+    // Generate unique album art for songs with shared covers
+    generateAllCovers();
+
+    // Mobile hamburger nav
+    setupMobileNav();
 
   } catch (err) {
-    console.error('Critical initialization error:', err);
-    // Gracefull fallback for errors
-    setTimeout(() => {
-      if (typeof showNotification === 'function') {
-        showNotification('Error starting app: ' + err.message, 'error');
-      } else {
-        alert('Error starting app: ' + err.message);
-      }
-    }, 1000);
+    console.error('Initialization error:', err);
+    showNotification('Error starting app: ' + err.message, 'error');
   } finally {
-    // Hide loading screen once execution is done
+    // Hide startup loading screen
     setTimeout(() => {
-      const overlay = document.getElementById('loading-overlay');
-      if (overlay) {
-        overlay.style.opacity = '0';
-        setTimeout(() => overlay.style.display = 'none', 300);
+      const loader = document.getElementById('loading-overlay');
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 300);
       }
-    }, 100);
+    }, 200);
   }
 });
 
 // ==========================================
-// 4. RENDERING LOGIC
+// 4. LIBRARY RENDER ENGINE
 // ==========================================
-
-/**
- * Renders the song list into the DOM based on current filters.
- * Supports filtering by category and search query.
- */
 function renderSongs() {
   const container = document.getElementById('songs-container');
+  if (!container) return;
+
   container.className = `songs-container ${appState.view}-view`;
   container.innerHTML = '';
 
-  // Filter the playlist based on appState criteria
-  const filteredSongs = appState.playlist.filter(song => {
-    const categoryMatch = appState.filter === 'all' ||
-      (appState.filter === 'favorites' && appState.favorites.includes(song.id)) ||
-      song.category.includes(appState.filter);
-
-    const searchMatch = !appState.searchQuery ||
+  const filtered = appState.playlist.filter(song => {
+    return !appState.searchQuery ||
       song.title.toLowerCase().includes(appState.searchQuery) ||
       song.artist.toLowerCase().includes(appState.searchQuery) ||
       song.album.toLowerCase().includes(appState.searchQuery);
-
-    return categoryMatch && searchMatch;
   });
 
-  // Empty state handling
-  if (filteredSongs.length === 0) {
-    container.innerHTML = `<div class="empty-state">No songs found matching your criteria.</div>`;
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state">No songs found matching your search.</div>`;
     return;
   }
 
-  // Generate HTML for each song card
-  filteredSongs.forEach((song, index) => {
-    const isActive = appState.playlist[appState.currentSongIndex].id === song.id;
-    const isFavorite = appState.favorites.includes(song.id);
+  filtered.forEach((song, index) => {
+    const currentActiveSong = appState.playlist[appState.currentSongIndex];
+    const isActive = currentActiveSong && currentActiveSong.id === song.id;
     const absoluteIndex = appState.playlist.findIndex(s => s.id === song.id);
 
     const card = document.createElement('div');
     card.className = `song-card ${isActive ? 'active' : ''}`;
-
-    // Staggered fade-in animation
     card.style.opacity = '0';
-    card.style.animation = `fadeInUp 0.4s ease forwards ${index * 0.05}s`;
+    card.style.animation = `fadeInUp 0.3s ease forwards ${index * 0.04}s`;
 
     card.innerHTML = `
       <div class="song-image-container">
-        <img loading="lazy" src="${song.cover}" alt="${song.title}" class="song-image">
+        <img loading="lazy" src="${song.cover}" alt="${song.title}" class="song-image" onload="this.classList.add('loaded')">
         <div class="play-overlay">
           <i class="ri-play-fill" style="font-size: 2rem; color: white;"></i>
         </div>
@@ -286,83 +229,73 @@ function renderSongs() {
       </div>
       <div class="song-actions">
         <span class="song-duration">${song.duration}</span>
-        <button class="btn-icon-sm ${isFavorite ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${song.id}')">
-          <i class="${isFavorite ? 'ri-heart-fill' : 'ri-heart-line'}"></i>
-        </button>
       </div>
     `;
 
-    // Play song on card click
     card.onclick = () => playSongAtIndex(absoluteIndex);
     container.appendChild(card);
   });
 }
 
 // ==========================================
-// 5. AUDIO PLAYER LOGIC
+// 5. AUDIO PLAYBACK OPERATIONS
 // ==========================================
-const audio = document.getElementById('audio-player');
-
-/**
- * Loads a song into the audio player without playing.
- * @param {number} index - Index of the song in the playlist
- */
 function loadSong(index) {
   if (index < 0 || index >= appState.playlist.length) return;
 
   const song = appState.playlist[index];
+  
+  // Set source with catch-all fallback check
   audio.src = song.sources[0];
   audio.load();
 
-  // Update Main Player UI
+  // Bottom Player Bar Update
   document.getElementById('player-title').textContent = song.title;
   document.getElementById('player-artist').textContent = song.artist;
   document.getElementById('player-cover').src = song.cover;
 
-  // Update Expanded Player UI
-  updateExpandedPlayerUI();
+  // Sidebar Now Playing Panel Update
+  document.getElementById('sp-title').textContent = song.title;
+  document.getElementById('sp-artist').textContent = song.artist;
+  document.getElementById('sp-art').src = song.cover;
 
-  // Update Queue UI
-  renderQueue();
+  // Sync all panels views
+  renderSidebarQueue();
   updateNextUpQueue();
-
-  // Highlight active song in list
   renderSongs();
 
-  // Update Background Album Art
-  updateAlbumBackground(song.cover);
+  // Update Background Ambience glows
+  updateBackgroundGlow(song.cover);
 }
 
-/**
- * Starts audio playback and handles potential promise errors
- */
 function playAudio() {
   const playPromise = audio.play();
   if (playPromise !== undefined) {
     playPromise.then(() => {
       appState.isPlaying = true;
-      updatePlayButton();
-      updatePlayingAnimation();
-    }).catch(error => {
-      console.error("Playback failed:", error);
-      showNotification('Playback Error: ' + error.message, 'error');
+      updatePlayControlsUI();
+    }).catch(err => {
+      console.warn("Source load failed, falling back to sample.mp3:", err);
+      showNotification('Playing fallback track (sample.mp3)', 'warning');
+      audio.src = 'assets/audio/sample.mp3';
+      audio.load();
+      audio.play().then(() => {
+        appState.isPlaying = true;
+        updatePlayControlsUI();
+      }).catch(e => {
+        console.error("Playback engine failure:", e);
+        showNotification('Failed to play fallback track', 'error');
+      });
     });
   }
 }
 
-/**
- * Pauses audio playback
- */
 function pauseAudio() {
   audio.pause();
   appState.isPlaying = false;
-  updatePlayButton();
-  updatePlayingAnimation();
+  updatePlayControlsUI();
 }
 
-/**
- * Toggles between play and pause states
- */
 function togglePlay() {
   if (appState.isPlaying) {
     pauseAudio();
@@ -371,91 +304,79 @@ function togglePlay() {
   }
 }
 
-/**
- * Plays a specific song by its index
- */
 function playSongAtIndex(index) {
   appState.currentSongIndex = index;
   loadSong(index);
   playAudio();
 }
 
-/**
- * Plays a song by its ID. Used in queue clicks.
- */
 function playSongById(id) {
-  const index = appState.playlist.findIndex(s => s.id === id);
-  if (index !== -1) playSongAtIndex(index);
+  const idx = appState.playlist.findIndex(s => s.id === id);
+  if (idx !== -1) playSongAtIndex(idx);
 }
 
-/**
- * Advances to the next song. Handles repeat modes and end of playlist.
- */
 function nextSong() {
   if (appState.repeatMode === 'one') {
-    // If repeat one, just seek to start
     audio.currentTime = 0;
     playAudio();
     return;
   }
 
-  // Calculate next index looping back to 0
+  const isLast = appState.currentSongIndex === appState.playlist.length - 1;
+
+  if (isLast && appState.repeatMode === 'none') {
+    appState.currentSongIndex = 0;
+    loadSong(0);
+    pauseAudio();
+    showNotification('End of playlist', 'info');
+    return;
+  }
+
   appState.currentSongIndex = (appState.currentSongIndex + 1) % appState.playlist.length;
   loadSong(appState.currentSongIndex);
   if (appState.isPlaying) playAudio();
 }
 
-/**
- * Goes back to the previous song or restarts current song
- */
 function prevSong() {
-  // If > 3 seconds in, restart song
   if (audio.currentTime > 3) {
     audio.currentTime = 0;
     return;
   }
 
-  // Calculate previous index looping to end
   appState.currentSongIndex = (appState.currentSongIndex - 1 + appState.playlist.length) % appState.playlist.length;
   loadSong(appState.currentSongIndex);
   if (appState.isPlaying) playAudio();
 }
 
-/**
- * Toggles shuffle mode. Randomizes playlist or restores order.
- */
 function toggleShuffle() {
   appState.isShuffled = !appState.isShuffled;
   const btn = document.getElementById('shuffle-btn');
 
   if (appState.isShuffled) {
     btn.classList.add('active');
-    // Shuffle: Create random order but keep current song first
-    const currentSong = appState.playlist[appState.currentSongIndex];
-    const remaining = appState.playlist.filter(s => s.id !== currentSong.id);
-    // Fisher-Yates shuffle
+    const current = appState.playlist[appState.currentSongIndex];
+    const remaining = appState.playlist.filter(s => s.id !== current.id);
+    
+    // Fisher-Yates Shuffling
     for (let i = remaining.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
     }
-    appState.playlist = [currentSong, ...remaining];
+    appState.playlist = [current, ...remaining];
     appState.currentSongIndex = 0;
-    showNotification('Shuffle On', 'info');
+    showNotification('Shuffle Active', 'info');
   } else {
     btn.classList.remove('active');
-    // Restore original order
-    const currentSong = appState.playlist[appState.currentSongIndex];
+    const current = appState.playlist[appState.currentSongIndex];
     appState.playlist = [...appState.originalPlaylist];
-    appState.currentSongIndex = appState.playlist.findIndex(s => s.id === currentSong.id);
-    showNotification('Shuffle Off', 'info');
+    appState.currentSongIndex = appState.playlist.findIndex(s => s.id === current.id);
+    showNotification('Shuffle Inactive', 'info');
   }
 
-  renderQueue(); // Update queue display
+  renderSidebarQueue();
+  updateNextUpQueue();
 }
 
-/**
- * Toggles repeat mode: none -> all -> one -> none
- */
 function toggleRepeat() {
   const btn = document.getElementById('repeat-btn');
   const icon = btn.querySelector('i');
@@ -463,11 +384,11 @@ function toggleRepeat() {
   if (appState.repeatMode === 'none') {
     appState.repeatMode = 'all';
     btn.classList.add('active');
-    showNotification('Repeat All', 'info');
+    showNotification('Repeat All Tracks', 'info');
   } else if (appState.repeatMode === 'all') {
     appState.repeatMode = 'one';
     icon.className = 'ri-repeat-one-line';
-    showNotification('Repeat One', 'info');
+    showNotification('Repeat One Track', 'info');
   } else {
     appState.repeatMode = 'none';
     btn.classList.remove('active');
@@ -477,8 +398,45 @@ function toggleRepeat() {
 }
 
 // ==========================================
-// 6. UI HELPERS & UTILITIES
+// 6. UI & PANEL SYNCHRONIZATION
 // ==========================================
+function updatePlayControlsUI() {
+  const playIcon = document.getElementById('play-btn').querySelector('i');
+  if (appState.isPlaying) {
+    playIcon.className = 'ri-pause-fill';
+    document.getElementById('sp-art').classList.add('playing');
+    document.getElementById('sp-css-visualizer').classList.add('playing');
+  } else {
+    playIcon.className = 'ri-play-fill';
+    document.getElementById('sp-art').classList.remove('playing');
+    document.getElementById('sp-css-visualizer').classList.remove('playing');
+  }
+}
+
+function updateVolumeUI() {
+  const slider = document.getElementById('volume-slider');
+  const volBtn = document.getElementById('volume-btn');
+
+  const percent = appState.volume * 100;
+  if (slider) slider.value = percent;
+
+  // Change volume indicator icon
+  let iconClass = 'ri-volume-mute-line';
+  if (appState.volume > 0.5) {
+    iconClass = 'ri-volume-up-line';
+  } else if (appState.volume > 0) {
+    iconClass = 'ri-volume-down-line';
+  }
+  
+  if (volBtn) volBtn.querySelector('i').className = iconClass;
+}
+
+function updateBackgroundGlow(coverPath) {
+  const glowElement = document.getElementById('album-art-bg');
+  if (glowElement) {
+    glowElement.style.backgroundImage = `radial-gradient(circle, rgba(114, 9, 183, 0.25) 0%, transparent 60%), url('${coverPath}')`;
+  }
+}
 
 function formatTime(seconds) {
   const min = Math.floor(seconds / 60);
@@ -486,202 +444,100 @@ function formatTime(seconds) {
   return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-function updatePlayButton() {
-  const btns = [document.getElementById('play-btn'), document.getElementById('expanded-play-btn')]; // Also update expanded button
-  btns.forEach(btn => {
-    if (!btn) return;
-    const icon = btn.querySelector('i');
-    if (appState.isPlaying) {
-      icon.className = 'ri-pause-fill';
-    } else {
-      icon.className = 'ri-play-fill';
-    }
-  });
-}
-
-function updateVolumeUI() {
-  const slider = document.getElementById('volume-slider');
-  const volumeBtn = document.getElementById('volume-btn');
-  if (slider) slider.value = appState.volume * 100;
-
-  // Change volume icon based on level
-  if (volumeBtn) {
-    const icon = volumeBtn.querySelector('i');
-    if (appState.volume === 0) icon.className = 'ri-volume-mute-line';
-    else if (appState.volume < 0.5) icon.className = 'ri-volume-down-line';
-    else icon.className = 'ri-volume-up-line';
-  }
-}
-
+// Notification Toast Alert
 function showNotification(message, type = 'info') {
   const container = document.getElementById('notifications');
+  if (!container) return;
+
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
   toast.textContent = message;
   container.appendChild(toast);
 
-  // Animate in
+  // Trigger animation transition slide
   setTimeout(() => toast.classList.add('show'), 10);
 
-  // Remove after 3 seconds
+  // Clear toast alert
   setTimeout(() => {
     toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
+    setTimeout(() => toast.remove(), 350);
+  }, 2500);
 }
 
-function toggleFavorite(songId) {
-  const index = appState.favorites.indexOf(songId);
-  if (index === -1) {
-    appState.favorites.push(songId);
-    showNotification('Added to Favorites', 'success');
+// ==========================================
+// 7. UNIFIED RIGHT SIDE PANEL
+// ==========================================
+function toggleSidebar() {
+  const sidebar = document.getElementById('right-sidebar');
+  if (!sidebar) return;
+
+  appState.sidebarOpen = !appState.sidebarOpen;
+  sidebar.classList.toggle('active', appState.sidebarOpen);
+}
+
+function setSidebarTab(tabName) {
+  appState.sidebarTab = tabName;
+  
+  // Highlight Active Trigger Header Button
+  document.querySelectorAll('.sidebar-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.tab === tabName);
+  });
+
+  // Display Matching Content panel
+  document.querySelectorAll('.tab-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === `tab-${tabName}`);
+  });
+}
+
+function renderSidebarQueue() {
+  const list = document.getElementById('sp-queue-list');
+  if (!list) return;
+
+  const upcoming = appState.playlist.slice(appState.currentSongIndex + 1);
+
+  if (upcoming.length === 0) {
+    list.innerHTML = `<p style="padding:1.5rem; text-align:center; color:var(--text-muted); font-size:0.85rem;">Play queue is empty</p>`;
   } else {
-    appState.favorites.splice(index, 1);
-    showNotification('Removed from Favorites', 'info');
-  }
-
-  localStorage.setItem('favorites', JSON.stringify(appState.favorites));
-  renderSongs();
-
-  // Update heart button color if current song
-  const currentSong = appState.playlist[appState.currentSongIndex];
-  if (currentSong.id === songId) {
-    const btn = document.getElementById('favorite-btn');
-    const isFav = appState.favorites.includes(songId);
-    if (btn) btn.querySelector('i').className = isFav ? 'ri-heart-fill' : 'ri-heart-line';
-    if (btn) btn.classList.toggle('active', isFav);
-  }
-}
-
-// ==========================================
-// 7. EVENT LISTENERS
-// ==========================================
-
-function setupPlayerListeners() {
-  // Playback Control Buttons
-  document.getElementById('play-btn').addEventListener('click', togglePlay);
-  document.getElementById('prev-btn').addEventListener('click', prevSong);
-  document.getElementById('next-btn').addEventListener('click', nextSong);
-  document.getElementById('shuffle-btn').addEventListener('click', toggleShuffle);
-  document.getElementById('repeat-btn').addEventListener('click', toggleRepeat);
-
-  // Expanded Player Interaction
-  const cover = document.getElementById('player-cover');
-  if (cover) {
-    cover.style.cursor = 'pointer';
-    cover.addEventListener('click', toggleExpandedPlayer);
-  }
-
-  // Volume Control
-  const volumeSlider = document.getElementById('volume-slider');
-  volumeSlider.addEventListener('input', (e) => {
-    appState.volume = e.target.value / 100;
-    audio.volume = appState.volume;
-    updateVolumeUI();
-  });
-
-  // HTML5 Audio Events
-  audio.addEventListener('timeupdate', () => {
-    const { duration, currentTime } = audio;
-    const progressPercent = (currentTime / duration) * 100;
-
-    // Update Progress Bars (Main & Expanded)
-    document.getElementById('progress-fill').style.width = `${progressPercent}%`;
-    document.getElementById('time-current').textContent = formatTime(currentTime);
-    document.getElementById('time-total').textContent = formatTime(duration || 0);
-  });
-
-  audio.addEventListener('ended', nextSong);
-
-  // Progress Bar Seek
-  document.getElementById('progress-bar').addEventListener('click', function (e) {
-    const width = this.clientWidth;
-    const clickX = e.offsetX;
-    audio.currentTime = (clickX / width) * audio.duration;
-  });
-
-  // Search Input Debounce
-  const searchInput = document.getElementById('search-input');
-  searchInput.addEventListener('input', (e) => {
-    appState.searchQuery = e.target.value.toLowerCase();
-    renderSongs();
-  });
-
-  // Filter Tabs
-  document.querySelectorAll('.category-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      appState.filter = tab.dataset.category;
-      renderSongs();
-    });
-  });
-
-  // Queue & Visualizer Toggles
-  document.getElementById('queue-btn').addEventListener('click', () => {
-    document.getElementById('queue-panel').classList.add('active');
-    renderQueue();
-  });
-  document.getElementById('close-queue').addEventListener('click', () => {
-    document.getElementById('queue-panel').classList.remove('active');
-  });
-}
-
-function renderQueue() {
-  const list = document.getElementById('queue-list');
-  const nextSongs = appState.playlist.slice(appState.currentSongIndex + 1, appState.currentSongIndex + 6);
-
-  if (nextSongs.length === 0) {
-    list.innerHTML = '<p style="padding:1rem; text-align:center; color:#666;">End of playlist</p>';
-    return;
-  }
-
-  list.innerHTML = nextSongs.map(song => `
-    <div class="queue-item" onclick="playSongById('${song.id}')">
-      <img src="${song.cover}" alt="${song.title}">
-      <div>
-        <div class="queue-item-title">${song.title}</div>
-        <div class="queue-item-artist">${song.artist}</div>
+    list.innerHTML = upcoming.map((song, i) => `
+      <div class="queue-item" onclick="playSongAtIndex(${appState.currentSongIndex + 1 + i})">
+        <img src="${song.cover}" alt="${song.title}">
+        <div class="queue-info">
+          <h5>${song.title}</h5>
+          <p>${song.artist}</p>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  }
 
-  // Update Current Song in Queue
+  // Render Current track
   const current = appState.playlist[appState.currentSongIndex];
-  const currentContainer = document.getElementById('queue-current');
-  if (currentContainer) {
-    currentContainer.innerHTML = `
+  const currentWrapper = document.getElementById('sp-queue-current');
+  if (currentWrapper && current) {
+    currentWrapper.innerHTML = `
       <div class="queue-item active">
         <img src="${current.cover}" alt="${current.title}">
-        <div>
-          <div class="queue-item-title">${current.title}</div>
-          <div class="queue-item-artist">${current.artist}</div>
+        <div class="queue-info">
+          <h5>${current.title}</h5>
+          <p>${current.artist}</p>
         </div>
       </div>
     `;
   }
 }
 
-// ==========================================
-// 8. AUDIO VISUALIZER ENGINE
-// ==========================================
-
-/**
- * Updates the 'Up Next' queue list in the Expanded Player sidebar
- */
 function updateNextUpQueue() {
-  const container = document.getElementById('ep-queue-list');
-  if (!container) return; // Element might not exist in some layouts
+  const list = document.getElementById('sp-next-up-list');
+  if (!list) return;
 
-  // Get next 5 songs
-  const nextSongs = appState.playlist.slice(appState.currentSongIndex + 1, appState.currentSongIndex + 6);
+  // Render next 3 songs as quick preview
+  const nextSongs = appState.playlist.slice(appState.currentSongIndex + 1, appState.currentSongIndex + 4);
 
   if (nextSongs.length === 0) {
-    container.innerHTML = '<p style="color:#666; font-size:0.9rem;">End of playlist</p>';
+    list.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem;">End of queue</p>`;
     return;
   }
 
-  container.innerHTML = nextSongs.map((song, i) => `
+  list.innerHTML = nextSongs.map((song, i) => `
     <div class="queue-item" onclick="playSongAtIndex(${appState.currentSongIndex + 1 + i})">
       <img src="${song.cover}" alt="${song.title}">
       <div class="queue-info">
@@ -692,239 +548,401 @@ function updateNextUpQueue() {
   `).join('');
 }
 
-// ==========================================
-// 8. AUDIO VISUALIZER ENGINE
-// ==========================================
-
-/**
- * Initializes the Web Audio API context and analyser.
- * Must be triggered by a user interaction (click) to bypass autoplay policies.
- */
-function initVisualizer() {
-  if (appState.audioContext) return; // Already initialized
-
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    appState.audioContext = new AudioContext();
-    appState.analyser = appState.audioContext.createAnalyser();
-
-    // Connect audio element to analyser
-    const source = appState.audioContext.createMediaElementSource(audio);
-    source.connect(appState.analyser);
-    appState.analyser.connect(appState.audioContext.destination);
-
-    // Config analyser
-    appState.analyser.fftSize = 256;
-  } catch (e) {
-    console.error('Web Audio API not supported:', e);
-    showNotification('Visualizer not supported on this device', 'error');
-  }
-}
-
-/**
- * Main animation loop for the visualizer.
- * Draws frequency data to the canvas in the visualizer panel.
- */
-function drawVisualizer() {
-  if (!appState.visualizerActive || !appState.analyser) return;
-
-  requestAnimationFrame(drawVisualizer);
-
-  const canvas = document.getElementById('visualizer-canvas');
-  const ctx = canvas.getContext('2d');
-
-  // Resize canvas to match display size
-  canvas.width = canvas.clientWidth;
-  canvas.height = canvas.clientHeight;
-
-  const bufferLength = appState.analyser.frequencyBinCount;
-  const dataArray = new Uint8Array(bufferLength);
-  appState.analyser.getByteFrequencyData(dataArray);
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const barWidth = (canvas.width / bufferLength) * 2.5;
-  let barHeight;
-  let x = 0;
-
-  for (let i = 0; i < bufferLength; i++) {
-    barHeight = dataArray[i];
-
-    // Dynamic gradient color based on height
-    const r = barHeight + (25 * (i / bufferLength));
-    const g = 250 * (i / bufferLength);
-    const b = 50;
-
-    ctx.fillStyle = `rgb(${r},${g},${b})`;
-    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-
-    x += barWidth + 1;
-  }
-}
-
-/**
- * Toggles the Visualizer Panel and starts/stops drawing.
- */
-function toggleVisualizer() {
-  const panel = document.getElementById('visualizer-panel');
-  if (!panel) return;
-
-  appState.visualizerActive = !appState.visualizerActive;
-
-  if (appState.visualizerActive) {
-    panel.classList.add('active');
-    initVisualizer(); // Ensure context is ready
-    drawVisualizer(); // Start loop
+function clearQueue() {
+  if (appState.playlist.length > appState.currentSongIndex + 1) {
+    appState.playlist.splice(appState.currentSongIndex + 1);
+    showNotification('Queue cleared', 'info');
+    renderSidebarQueue();
+    updateNextUpQueue();
   } else {
-    panel.classList.remove('active');
+    showNotification('No upcoming tracks in queue', 'info');
   }
 }
 
-
 // ==========================================
-// 9. LOCAL MUSIC IMPORT
+// 8. INTERACTIVE INPUT HANDLERS & BINDINGS
 // ==========================================
+function setupListeners() {
+  // Mini Player Bar buttons
+  document.getElementById('play-btn').addEventListener('click', togglePlay);
+  document.getElementById('prev-btn').addEventListener('click', prevSong);
+  document.getElementById('next-btn').addEventListener('click', nextSong);
+  document.getElementById('shuffle-btn').addEventListener('click', toggleShuffle);
+  document.getElementById('repeat-btn').addEventListener('click', toggleRepeat);
 
-/**
- * Handles the selection of a local folder.
- * Scans for audio files and adds them to the playlist.
- */
-function handleFolderSelect(event) {
-  const files = event.target.files;
-  if (!files.length) return;
-
-  let addedCount = 0;
-
-  Array.from(files).forEach(file => {
-    // Basic check for audio MIME types
-    if (file.type.startsWith('audio/')) {
-      const song = {
-        id: `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        title: file.name.replace(/\.[^/.]+$/, ""), // Strip extension
-        artist: 'Local Artist',
-        album: 'Local Import',
-        cover: 'assets/images/logo.png', // Default cover
-        sources: [URL.createObjectURL(file)],
-        duration: 'Unknown',
-        category: ['local', 'new'],
-        price: 0
-      };
-
-      appState.playlist.push(song);
-      addedCount++;
-    }
+  // Clicking bottom player cover or info panel toggles sidebar Player view
+  document.getElementById('player-left-clickable').addEventListener('click', () => {
+    toggleSidebar();
+    setSidebarTab('now-playing');
   });
 
-  if (addedCount > 0) {
-    showNotification(`Imported ${addedCount} songs from folder`, 'success');
-    appState.filter = 'local'; // Switch to show local songs
-    renderSongs();
-  } else {
-    showNotification('No audio files found in selected folder', 'warning');
+  // Sidebar controls
+  document.getElementById('sidebar-toggle-btn').addEventListener('click', toggleSidebar);
+  document.getElementById('close-sidebar-btn').addEventListener('click', toggleSidebar);
+
+  // Sidebar header tabs clicks
+  document.querySelectorAll('.sidebar-tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      setSidebarTab(e.target.dataset.tab);
+    });
+  });
+
+  // Clear Queue
+  const spClearBtn = document.getElementById('sp-clear-queue-btn');
+  if (spClearBtn) spClearBtn.addEventListener('click', clearQueue);
+
+  // Quality settings toggles
+  const qualitySelect = document.getElementById('settings-quality');
+  if (qualitySelect) {
+    qualitySelect.addEventListener('change', (e) => {
+      localStorage.setItem('audioQuality', e.target.value);
+      showNotification(`Audio Quality: ${e.target.value.toUpperCase()}`, 'success');
+    });
   }
-}
+  const crossfadeCb = document.getElementById('settings-crossfade');
+  if (crossfadeCb) {
+    crossfadeCb.addEventListener('change', (e) => {
+      localStorage.setItem('crossfade', e.target.checked);
+      showNotification(`Crossfade ${e.target.checked ? 'Enabled' : 'Disabled'}`, 'success');
+    });
+  }
+  const normalizeCb = document.getElementById('settings-normalize');
+  if (normalizeCb) {
+    normalizeCb.addEventListener('change', (e) => {
+      localStorage.setItem('normalize', e.target.checked);
+      showNotification(`Volume Normalization ${e.target.checked ? 'Enabled' : 'Disabled'}`, 'success');
+    });
+  }
 
+  // Gear Settings dropdown toggle
+  const settingsBtn = document.getElementById('sp-settings-btn');
+  const dropdown = document.getElementById('sp-settings-dropdown');
+  if (settingsBtn && dropdown) {
+    settingsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('active');
+    });
+    // Click outside closing dropdown
+    window.addEventListener('click', () => {
+      dropdown.classList.remove('active');
+    });
+  }
 
-// ==========================================
-// 10. SETTINGS & EXTENDED LISTENERS
-// ==========================================
+  // Volume Slider slider input
+  const volSlider = document.getElementById('volume-slider');
+  if (volSlider) {
+    volSlider.addEventListener('input', (e) => {
+      appState.volume = e.target.value / 100;
+      audio.volume = appState.volume;
+      updateVolumeUI();
+      localStorage.setItem('neon_volume', appState.volume);
+    });
+  }
 
-/**
- * Secondary listener setup for advanced features 
- * (Visualizer, Settings, Local Import) that were separate.
- */
-function setupAdvancedListeners() {
-  // Visualizer Toggle
-  const vizBtn = document.getElementById('visualizer-btn');
-  if (vizBtn) vizBtn.addEventListener('click', toggleVisualizer);
+  // Volume Mute Button toggle
+  const volumeBtn = document.getElementById('volume-btn');
+  if (volumeBtn) {
+    volumeBtn.addEventListener('click', () => {
+      if (audio.volume > 0) {
+        appState.savedVolume = appState.volume;
+        appState.volume = 0;
+      } else {
+        appState.volume = appState.savedVolume || 0.7;
+      }
+      audio.volume = appState.volume;
+      updateVolumeUI();
+      localStorage.setItem('neon_volume', appState.volume);
+    });
+  }
 
-  const closeViz = document.getElementById('close-visualizer');
-  if (closeViz) closeViz.addEventListener('click', toggleVisualizer);
+  // Audio HTML5 Core playback events
+  audio.addEventListener('timeupdate', () => {
+    const { duration, currentTime } = audio;
+    if (isNaN(duration)) return;
 
-  // Local Import
+    const percent = (currentTime / duration) * 100;
+    
+    // Update seeking visual filled track
+    const fill = document.getElementById('progress-fill');
+    if (fill) fill.style.width = `${percent}%`;
+
+    // Time progress labels
+    document.getElementById('time-current').textContent = formatTime(currentTime);
+    document.getElementById('time-total').textContent = formatTime(duration);
+  });
+
+  audio.addEventListener('ended', nextSong);
+
+  // Clickable Seek Bar Seeking
+  const progressBar = document.getElementById('progress-bar');
+  if (progressBar) {
+    progressBar.addEventListener('click', function (e) {
+      const clickX = e.offsetX;
+      const width = this.clientWidth;
+      if (audio.duration) {
+        audio.currentTime = (clickX / width) * audio.duration;
+      }
+    });
+  }
+
+  // Grid/List View switcher toggles
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      appState.view = btn.dataset.view;
+      renderSongs();
+    });
+  });
+
+  // Search filter typing input
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      appState.searchQuery = e.target.value.trim().toLowerCase();
+      
+      const clearBtn = document.getElementById('clear-search');
+      if (clearBtn) {
+        clearBtn.style.display = appState.searchQuery ? 'block' : 'none';
+      }
+      renderSongs();
+    });
+  }
+
+  // Clear Search button clicks
+  const clearSearchBtn = document.getElementById('clear-search');
+  if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', () => {
+      const input = document.getElementById('search-input');
+      input.value = '';
+      appState.searchQuery = '';
+      clearSearchBtn.style.display = 'none';
+      renderSongs();
+    });
+  }
+
+  // Local music file system imports
   const importBtn = document.getElementById('import-music-btn');
   const fileInput = document.getElementById('local-folder-input');
 
   if (importBtn && fileInput) {
     importBtn.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', handleFolderSelect);
-  }
-
-  // Settings Menu Toggle
-  const settingsBtn = document.getElementById('settings-btn');
-  const settingsDropdown = document.getElementById('settings-dropdown');
-
-  if (settingsBtn && settingsDropdown) {
-    settingsBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      settingsDropdown.style.display = settingsDropdown.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // Close on click outside
-    window.addEventListener('click', () => {
-      settingsDropdown.style.display = 'none';
-    });
+    fileInput.addEventListener('change', handleFolderImport);
   }
 }
 
-// ==========================================
-// 11. EXPANDED PLAYER LOGIC (Continued)
-// ==========================================
+// Local music importer folder reader
+function handleFolderImport(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
 
+  let count = 0;
 
-/**
- * Toggles the full-screen expanded player overlay.
- * Uses a simple class toggle on a high z-index overlay.
- */
-window.toggleExpandedPlayer = function () {
-  console.log('Toggling Expanded Player');
-  const overlay = document.getElementById('expanded-player-overlay');
-  if (!overlay) return;
+  Array.from(files).forEach(file => {
+    const isAudioType = file.type.startsWith('audio/');
+    const isAudioExt = /\.(mp3|wav|ogg|m4a|flac|aac)$/i.test(file.name);
 
-  overlay.classList.toggle('active');
+    if (isAudioType || isAudioExt) {
+      const trackTitle = file.name.replace(/\.[^/.]+$/, "");
+      const localTrack = {
+        id: `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        title: trackTitle, // Strip ext
+        artist: "Local Track",
+        album: "Local Folder",
+        cover: generateCoverArt(trackTitle, "Local Track"),
+        sources: [URL.createObjectURL(file)],
+        duration: "Local"
+      };
 
-  // Lock body scroll when overlay is active
-  if (overlay.classList.contains('active')) {
-    document.body.style.overflow = 'hidden';
-    updateExpandedPlayerUI();
+      appState.playlist.push(localTrack);
+      appState.originalPlaylist.push(localTrack);
+      count++;
+    }
+  });
+
+  if (count > 0) {
+    showNotification(`Successfully imported ${count} local tracks`, 'success');
+    renderSongs();
+    renderSidebarQueue();
   } else {
-    document.body.style.overflow = '';
-  }
-};
-
-/**
- * Updates the expanded player UI with current song details.
- * Called whenever the song changes or overlay opens.
- */
-function updateExpandedPlayerUI() {
-  const song = appState.playlist[appState.currentSongIndex];
-  if (!song) return;
-
-  const titleEl = document.getElementById('ep-title');
-  const artistEl = document.getElementById('ep-artist');
-  const artEl = document.getElementById('ep-art');
-
-  if (titleEl) titleEl.textContent = song.title;
-  if (artistEl) artistEl.textContent = song.artist;
-  if (artEl) artEl.src = song.cover;
-
-  updatePlayButton();
-}
-
-/**
- * Helper to update dynamic background blur effect
- */
-function updateAlbumBackground(imageUrl) {
-  const bgElement = document.getElementById('album-art-bg');
-  if (bgElement) {
-    bgElement.style.backgroundImage = `url(${imageUrl})`;
+    showNotification('No audio tracks found in directory', 'warning');
   }
 }
 
-function updatePlayingAnimation() {
-  const art = document.querySelector('.ep-art');
-  if (art) {
-    // Optional: Add breathing animation class here if desired
-    // art.classList.toggle('playing', !audio.paused);
+// ==========================================
+// 9. SETTINGS PREFERENCE LOADER
+// ==========================================
+function loadSettings() {
+  try {
+    const vol = localStorage.getItem('neon_volume');
+    if (vol !== null) {
+      appState.volume = parseFloat(vol);
+      audio.volume = appState.volume;
+    } else {
+      audio.volume = appState.volume; // 0.7 default
+    }
+
+    const quality = localStorage.getItem('audioQuality') || 'high';
+    const qualSelect = document.getElementById('settings-quality');
+    if (qualSelect) qualSelect.value = quality;
+
+    const crossfade = localStorage.getItem('crossfade') === 'true';
+    const crossCb = document.getElementById('settings-crossfade');
+    if (crossCb) crossCb.checked = crossfade;
+
+    const normalize = localStorage.getItem('normalize') === 'true';
+    const normCb = document.getElementById('settings-normalize');
+    if (normCb) normCb.checked = normalize;
+
+  } catch (err) {
+    console.warn("Could not read localStorage settings:", err);
+  }
+}
+
+// ==========================================
+// 10. NAVBAR SCROLL-SPY
+// ==========================================
+function setupScrollSpy() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-20% 0px -60% 0px',
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${id}`) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => observer.observe(section));
+}
+
+// ==========================================
+// 11. CANVAS ALBUM ART GENERATOR
+// ==========================================
+function generateCoverArt(title, artist) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 400;
+  canvas.height = 400;
+  const ctx = canvas.getContext('2d');
+
+  // Deterministic hash for unique colors per song
+  let hash = 0;
+  const seed = title + artist;
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    hash |= 0;
+  }
+
+  const hue1 = Math.abs(hash % 360);
+  const hue2 = (hue1 + 45 + Math.abs((hash >> 8) % 40)) % 360;
+
+  // Gradient background
+  const bg = ctx.createLinearGradient(0, 0, 400, 400);
+  bg.addColorStop(0, `hsl(${hue1}, 55%, 18%)`);
+  bg.addColorStop(1, `hsl(${hue2}, 65%, 8%)`);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, 400, 400);
+
+  // Radial glow accent
+  const glow = ctx.createRadialGradient(200, 160, 20, 200, 160, 180);
+  glow.addColorStop(0, `hsla(${hue1}, 70%, 50%, 0.2)`);
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, 400, 400);
+
+  // Decorative circles
+  for (let i = 0; i < 3; i++) {
+    const cx = 80 + Math.abs((hash >> (i * 4)) % 240);
+    const cy = 60 + Math.abs((hash >> (i * 3 + 2)) % 200);
+    const r = 30 + Math.abs((hash >> (i * 5)) % 60);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${(hue1 + i * 80) % 360}, 60%, 50%, 0.08)`;
+    ctx.fill();
+  }
+
+  // Music note icon
+  ctx.font = '72px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = `hsla(${hue1}, 50%, 65%, 0.25)`;
+  ctx.fillText('\u266B', 200, 150);
+
+  // Song title
+  ctx.font = 'bold 26px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.textBaseline = 'bottom';
+  let displayTitle = title;
+  if (ctx.measureText(displayTitle).width > 340) {
+    displayTitle = displayTitle.substring(0, 18) + '\u2026';
+  }
+  ctx.fillText(displayTitle, 200, 300);
+
+  // Artist name
+  ctx.font = '16px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.textBaseline = 'top';
+  ctx.fillText(artist, 200, 310);
+
+  // Top accent line
+  ctx.strokeStyle = `hsla(${hue1}, 70%, 55%, 0.35)`;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(100, 55);
+  ctx.lineTo(300, 55);
+  ctx.stroke();
+
+  return canvas.toDataURL('image/jpeg', 0.85);
+}
+
+function generateAllCovers() {
+  appState.playlist.forEach((song, i) => {
+    // Generate unique canvas cover art for every single track in the database!
+    const newCover = generateCoverArt(song.title, song.artist);
+    appState.playlist[i].cover = newCover;
+    appState.originalPlaylist[i].cover = newCover;
+  });
+
+  // Re-render with new unique covers
+  renderSongs();
+  loadSong(appState.currentSongIndex);
+}
+
+// ==========================================
+// 12. MOBILE NAVIGATION TOGGLE
+// ==========================================
+function setupMobileNav() {
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('nav-menu');
+
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('mobile-active');
+      const icon = toggle.querySelector('i');
+      icon.className = menu.classList.contains('mobile-active')
+        ? 'ri-close-line'
+        : 'ri-menu-line';
+    });
+
+    // Close menu on nav link click
+    menu.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menu.classList.remove('mobile-active');
+        toggle.querySelector('i').className = 'ri-menu-line';
+      });
+    });
   }
 }
